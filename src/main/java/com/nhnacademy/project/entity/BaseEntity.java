@@ -13,9 +13,7 @@
 package com.nhnacademy.project.entity;
 
 import lombok.Getter;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -29,16 +27,11 @@ import java.time.LocalDateTime;
 @Getter
 public abstract class BaseEntity {
     @CreatedDate
-    private LocalDateTime createDate;
+    @Column(name = "created_name")
+    private LocalDateTime createdDate;
 
     @LastModifiedDate
+    @Column(name = "modified_name")
     private LocalDateTime modifiedDate;
-
-    @CreatedBy
-    @Column(updatable = false)
-    private String createdBy;
-
-    @LastModifiedBy
-    private String modifiedBy;
 }
 
