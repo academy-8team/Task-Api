@@ -1,6 +1,5 @@
 package com.nhnacademy.project.entity;
 
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +9,7 @@ import javax.persistence.*;
 @Table(name = "Task_Tags")
 @Getter
 @Setter
-public class TaskTag extends BaseEntity{
+public class TaskTag extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "task_tag_id", nullable = false)

@@ -14,7 +14,7 @@ import java.util.Set;
 @Table(name = "Tasks")
 @Getter
 @Setter
-public class Task extends BaseEntity{
+public class Task extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "task_id", nullable = false)

@@ -1,6 +1,6 @@
 /**
  * packageName :  com.nhnacademy.project.entity
- * fileName : BaseEntity
+ * fileName : BaseTimeEntity
  * author :  ichunghui
  * date : 2023/06/02 
  * description :
@@ -25,13 +25,13 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @Getter
-public abstract class BaseEntity {
+public abstract class BaseTimeEntity {
     @CreatedDate
-    @Column(name = "created_name")
+    @Column(name = "created_date")
     private LocalDateTime createdDate;
 
     @LastModifiedDate
-    @Column(name = "modified_name")
-    private LocalDateTime modifiedDate;
+    @Column(name = "last_modified_date")
+    private LocalDateTime lastModifiedDate;
 }
 

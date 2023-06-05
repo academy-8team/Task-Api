@@ -20,7 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/projects/{projectId}/tasks/{taskId}/comments")
+@RequestMapping("/projects/{projectId}/tasks/{taskId}/comments")
 @RequiredArgsConstructor
 public class CommentController {
 

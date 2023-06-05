@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Table(name = "Comments")
 @Getter
 @Setter
-public class Comment extends BaseEntity{
+public class Comment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "task_id", nullable = false)

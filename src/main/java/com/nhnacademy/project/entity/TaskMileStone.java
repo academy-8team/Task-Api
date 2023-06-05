@@ -21,7 +21,7 @@ import javax.persistence.*;
 @Table
 @Getter
 @Setter
-public class TaskMileStone extends BaseEntity{
+public class TaskMileStone extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "task_milstone_id", nullable = false)

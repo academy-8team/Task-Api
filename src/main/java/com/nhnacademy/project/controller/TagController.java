@@ -19,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/projects/{projectId}/tags")
+@RequestMapping("/projects/{projectId}/tags")
 @RequiredArgsConstructor
 public class TagController {
 

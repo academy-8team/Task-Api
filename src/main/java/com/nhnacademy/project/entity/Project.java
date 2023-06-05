@@ -3,7 +3,6 @@ package com.nhnacademy.project.entity;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -14,7 +13,7 @@ import java.util.Set;
 @Table(name = "Projects")
 @Getter
 @Setter
-public class Project extends BaseEntity{
+public class Project extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "project_id", nullable = false)
