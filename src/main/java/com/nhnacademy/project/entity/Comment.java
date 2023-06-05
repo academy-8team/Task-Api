@@ -3,7 +3,6 @@ package com.nhnacademy.project.entity;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -12,11 +11,10 @@ import javax.validation.constraints.Size;
 @Table(name = "Comments")
 @Getter
 @Setter
-public class Comment extends BaseEntity{
-
+public class Comment extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "task_id", nullable = false)
     private Long id;
 
     @NotNull

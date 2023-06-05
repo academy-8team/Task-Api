@@ -17,7 +17,7 @@ public class TaskService {
     public Task createTask(Long milestoneId, Task task) {
         Milestone milestone = milestoneRepository.findById(milestoneId)
                 .orElseThrow(() -> new RuntimeException("Milestone not found"));
-        task.setMilestone(milestone);
+        task.setTaskMileStones(milestone.getTaskMileStones());
         return taskRepository.save(task);
     }
 

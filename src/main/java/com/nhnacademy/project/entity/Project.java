@@ -3,26 +3,34 @@ package com.nhnacademy.project.entity;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Projects")
 @Getter
 @Setter
-public class Project extends BaseEntity{
+public class Project extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @NotNull
+    @Column(name = "project_id", nullable = false)
     private Long id;
 
-    @NotNull
     @Size(min = 1, max = 100)
     private String name;
+
+    @Column(name = "content", length = 500)
+    private String content;
 
     @Enumerated(EnumType.STRING)
     @NotNull
     private ProjectStatus status;
+
+
+    @OneToMany(mappedBy = "project", orphanRemoval = true)
+    private Set<ProjectTask> projectTasks = new LinkedHashSet<>();
+
 }

@@ -1,6 +1,6 @@
 /**
  * packageName :  com.nhnacademy.project.entity
- * fileName : BaseEntity
+ * fileName : BaseTimeEntity
  * author :  ichunghui
  * date : 2023/06/02 
  * description :
@@ -13,9 +13,7 @@
 package com.nhnacademy.project.entity;
 
 import lombok.Getter;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -27,18 +25,13 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @Getter
-public abstract class BaseEntity {
+public abstract class BaseTimeEntity {
     @CreatedDate
-    private LocalDateTime createDate;
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
 
     @LastModifiedDate
-    private LocalDateTime modifiedDate;
-
-    @CreatedBy
-    @Column(updatable = false)
-    private String createdBy;
-
-    @LastModifiedBy
-    private String modifiedBy;
+    @Column(name = "last_modified_date")
+    private LocalDateTime lastModifiedDate;
 }
 

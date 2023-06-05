@@ -3,7 +3,6 @@ package com.nhnacademy.project.entity;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -12,10 +11,10 @@ import javax.validation.constraints.Size;
 @Table(name = "Tags")
 @Getter
 @Setter
-public class Tag extends BaseEntity{
+public class Tag extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @NotNull
+    @Column(name = "tag_id", nullable = false)
     private Long id;
 
     @NotNull

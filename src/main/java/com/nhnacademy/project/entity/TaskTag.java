@@ -1,20 +1,18 @@
 package com.nhnacademy.project.entity;
 
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Task_Tags")
+@Table(name = "task_tags")
 @Getter
 @Setter
-public class TaskTag extends BaseEntity{
+public class TaskTag extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @NotNull
+    @Column(name = "task_tag_id", nullable = false)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
