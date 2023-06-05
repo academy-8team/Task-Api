@@ -4,7 +4,10 @@ import com.nhnacademy.project.dto.CreateUpdateMilestoneDto;
 import com.nhnacademy.project.dto.MilestoneDto;
 import com.nhnacademy.project.entity.Milestone;
 import com.nhnacademy.project.entity.Project;
+import com.nhnacademy.project.entity.TaskMileStone;
 import org.springframework.stereotype.Component;
+
+import java.util.Set;
 
 @Component
 public class MilestoneMapper {
@@ -13,14 +16,14 @@ public class MilestoneMapper {
         MilestoneDto milestoneDto = new MilestoneDto();
         milestoneDto.setId(milestone.getId());
         milestoneDto.setName(milestone.getName());
-        milestoneDto.setProjectId(milestone.getProject().getId());
+        milestoneDto.setProjectId(milestone.getId());
         return milestoneDto;
     }
 
     public Milestone toEntity(CreateUpdateMilestoneDto milestoneDto, Project project) {
         Milestone milestone = new Milestone();
         milestone.setName(milestoneDto.getName());
-        milestone.setProject(project);
+        milestone.setTaskMileStones((Set<TaskMileStone>) project);
         return milestone;
     }
 }

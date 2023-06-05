@@ -19,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/projects/{projectId}/tasks")
+@RequestMapping("/projects/{projectId}/tasks")
 @RequiredArgsConstructor
 public class TaskController {
 

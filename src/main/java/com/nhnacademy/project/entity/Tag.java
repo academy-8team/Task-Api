@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Table(name = "Tags")
 @Getter
 @Setter
-public class Tag extends BaseEntity{
+public class Tag extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "tag_id", nullable = false)

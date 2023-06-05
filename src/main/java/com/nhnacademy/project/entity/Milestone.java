@@ -14,7 +14,7 @@ import java.util.Set;
 @Table(name = "Milestones")
 @Getter
 @Setter
-public class Milestone extends BaseEntity{
+public class Milestone extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "milestone_id", nullable = false)

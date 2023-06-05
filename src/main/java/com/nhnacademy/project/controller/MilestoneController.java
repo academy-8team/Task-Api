@@ -20,7 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/projects/{projectId}/milestones")
+@RequestMapping("/projects/{projectId}/milestones")
 @RequiredArgsConstructor
 public class MilestoneController {
 
