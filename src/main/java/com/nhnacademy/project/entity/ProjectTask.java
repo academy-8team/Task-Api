@@ -17,8 +17,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity(name = "project_tasks")
-@Table
+@Entity
+@Table(name = "project_tasks")
 @Getter
 @Setter
 public class ProjectTask {
