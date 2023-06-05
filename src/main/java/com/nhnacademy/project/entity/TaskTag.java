@@ -6,7 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Task_Tags")
+@Table(name = "task_tags")
 @Getter
 @Setter
 public class TaskTag extends BaseTimeEntity {
