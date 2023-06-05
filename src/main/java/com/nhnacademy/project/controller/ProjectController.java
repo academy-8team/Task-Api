@@ -14,7 +14,6 @@ package com.nhnacademy.project.controller;
 
 import com.nhnacademy.project.dto.CreateUpdateProjectDto;
 import com.nhnacademy.project.dto.ProjectDto;
-import com.nhnacademy.project.entity.Project;
 import com.nhnacademy.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
