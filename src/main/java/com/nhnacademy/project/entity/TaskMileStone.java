@@ -24,7 +24,7 @@ import javax.persistence.*;
 public class TaskMileStone extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "task_milstone_id", nullable = false)
+    @Column(name = "task_milestone_id", nullable = false)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

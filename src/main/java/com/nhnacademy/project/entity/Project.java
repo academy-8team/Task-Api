@@ -19,7 +19,7 @@ public class Project extends BaseTimeEntity {
     @Column(name = "project_id", nullable = false)
     private Long id;
 
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 30)
     private String name;
 
     @Column(name = "content", length = 500)
