@@ -30,7 +30,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 @Entity
-public class ProjectMember {
+public class ProjectMember extends BaseTimeEntity{
     @EmbeddedId
     private ProjectMemberPk projectMemberPk;
 

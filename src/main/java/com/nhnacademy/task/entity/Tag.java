@@ -30,7 +30,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Tag {
+public class Tag extends {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tagNum;

@@ -35,7 +35,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Task {
+public class Task extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long taskNum;

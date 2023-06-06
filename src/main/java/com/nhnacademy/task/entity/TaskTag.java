@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 @Entity
-public class TaskTag {
+public class TaskTag extends BaseTimeEntity{
     @EmbeddedId
     private TaskTagPk taskTagPk;
 
