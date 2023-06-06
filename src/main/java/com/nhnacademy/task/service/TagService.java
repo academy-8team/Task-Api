@@ -1,7 +1,6 @@
 package com.nhnacademy.task.service;
 
 import com.nhnacademy.task.entity.Project;
-import com.nhnacademy.task.entity.Tag;
 import com.nhnacademy.task.repository.ProjectRepository;
 import com.nhnacademy.task.repository.TagRepository;
 import lombok.RequiredArgsConstructor;

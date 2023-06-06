@@ -7,21 +7,22 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
-@Entity
-@Table(name = "Comments")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-public class Comment extends BaseTimeEntity {
+@Entity
+public class Comment {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "task_id", nullable = false)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long commentNum;
 
-    @NotNull
-    @Size(min = 1, max = 500)
-    private String content;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_id")
+    @ManyToOne
+    @JoinColumn(name = "task_num")
     private Task task;
+
+    private String commentContent;
+
+    private String writerId;
 }

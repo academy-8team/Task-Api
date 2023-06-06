@@ -1,39 +1,58 @@
+/**
+ * packageName :  com.nhnacademy.task.entity
+ * fileName : Task
+ * author :  ichunghui
+ * date : 2023/06/06 
+ * description :
+ * ===========================================================
+ * DATE                 AUTHOR                NOTE
+ * -----------------------------------------------------------
+ * 2023/06/06                ichunghui             최초 생성
+ */
+
 package com.nhnacademy.task.entity;
 
-import com.sun.istack.NotNull;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-@Entity
-@Table(name = "Tasks")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-public class Task extends BaseTimeEntity {
+@Entity
+public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "task_id", nullable = false)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long taskNum;
 
-    @Column(name = "name", length = 100)
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "project_num")
+    private Project project;
 
-    @NotNull
-    @Size(min = 1, max = 500)
-    private String content;
+    @OneToOne
+    @JoinColumn(name = "milestone_num")
+    private Milestone milestone;
 
-    @Column(name = "start_date")
-    private LocalDateTime startDate;
+    private String taskTitle;
 
-    @Column(name = "end_date")
-    private LocalDateTime endDate;
+    private String taskContent;
 
-    @OneToMany(mappedBy = "task", orphanRemoval = true)
-    private Set<TaskMileStone> taskMileStones = new LinkedHashSet<>();
-
+    @OneToMany(mappedBy = "task", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Comment> comments;
 }
