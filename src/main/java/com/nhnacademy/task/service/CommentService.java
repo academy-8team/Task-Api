@@ -1,7 +1,6 @@
 package com.nhnacademy.task.service;
 
 import com.nhnacademy.task.entity.Comment;
-import com.nhnacademy.task.entity.Task;
 import com.nhnacademy.task.mapper.CommentMapper;
 import com.nhnacademy.task.repository.CommentRepository;
 import com.nhnacademy.task.repository.TaskRepository;

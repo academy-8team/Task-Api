@@ -1,6 +1,6 @@
 /**
  * packageName :  com.nhnacademy.task.entity
- * fileName : Tag
+ * fileName : ProjectMember
  * author :  ichunghui
  * date : 2023/06/06 
  * description :
@@ -10,34 +10,35 @@
  * 2023/06/06                ichunghui             최초 생성
  */
 
-package com.nhnacademy.task.entity;
-
+import com.nhnacademy.task.entity.pk.ProjectMemberPk;
+import javax.persistence.Embedded;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 @Entity
-public class Tag {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tagNum;
+public class ProjectMember {
+    @EmbeddedId
+    private ProjectMemberPk projectMemberPk;
 
+    @Enumerated(EnumType.STRING)
+    private ProjectRole projectRole;
+
+    @MapsId("projectNum")
     @ManyToOne
     @JoinColumn(name = "project_num")
     private Project project;
-
-    private String tagTitle;
 }

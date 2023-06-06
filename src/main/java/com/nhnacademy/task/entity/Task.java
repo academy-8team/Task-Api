@@ -1,6 +1,6 @@
 /**
  * packageName :  com.nhnacademy.task.entity
- * fileName : Tag
+ * fileName : Task
  * author :  ichunghui
  * date : 2023/06/06 
  * description :
@@ -12,12 +12,17 @@
 
 package com.nhnacademy.task.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,14 +35,24 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Tag {
+public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tagNum;
+    private Long taskNum;
 
     @ManyToOne
     @JoinColumn(name = "project_num")
     private Project project;
 
-    private String tagTitle;
+    @OneToOne
+    @JoinColumn(name = "milestone_num")
+    private Milestone milestone;
+
+    private String taskTitle;
+
+    private String taskContent;
+
+    @OneToMany(mappedBy = "task", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Comment> comments;
 }

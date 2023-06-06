@@ -1,7 +1,6 @@
 package com.nhnacademy.task.service;
 
 import com.nhnacademy.task.entity.Milestone;
-import com.nhnacademy.task.entity.Task;
 import com.nhnacademy.task.repository.MilestoneRepository;
 import com.nhnacademy.task.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;

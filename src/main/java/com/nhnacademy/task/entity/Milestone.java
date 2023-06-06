@@ -10,26 +10,24 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-@Entity
-@Table(name = "Milestones")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-public class Milestone extends BaseTimeEntity {
+@Entity
+public class Milestone {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "milestone_id", nullable = false)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long milestoneNum;
 
-    @NotNull
-    @Size(min = 1, max = 100)
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "project_num")
+    private Project project;
 
-    @Column(name = "start_date")
-    private LocalDateTime startDate;
+    private String milestoneTitle;
 
-    @Column(name = "end_date")
-    private LocalDateTime endDate;
-
-    @OneToMany(mappedBy = "milestone", orphanRemoval = true)
-    private Set<TaskMileStone> taskMileStones = new LinkedHashSet<>();
+    @OneToOne(mappedBy = "milestone")
+    @JsonIgnore
+    private Task task;
 }

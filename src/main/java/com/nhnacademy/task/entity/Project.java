@@ -9,28 +9,36 @@ import javax.validation.constraints.Size;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-@Entity
-@Table(name = "Projects")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
-@Setter
-public class Project extends BaseTimeEntity {
+@Entity
+public class Project {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "project_id", nullable = false)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long projectNum;
 
-    @Size(min = 1, max = 30)
-    private String name;
+    private String projectName;
 
-    @Column(name = "content", length = 500)
-    private String content;
+    private String projectDescription;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
-    private ProjectStatus status;
+    private ProjectStatus projectStatus;
 
+    @OneToMany(mappedBy = "project")
+    @JsonIgnore
+    private List<Task> tasks;
 
-    @OneToMany(mappedBy = "project", orphanRemoval = true)
-    private Set<ProjectTask> projectTasks = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "project")
+    @JsonIgnore
+    private List<ProjectMember> projectMembers;
 
+    @OneToMany(mappedBy = "project")
+    @JsonIgnore
+    private List<Tag> tags;
+
+    @OneToMany(mappedBy = "project")
+    @JsonIgnore
+    private List<Milestone> milestones;
 }
