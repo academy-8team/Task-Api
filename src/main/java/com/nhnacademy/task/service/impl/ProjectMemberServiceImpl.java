@@ -2,7 +2,7 @@
  * packageName :  com.nhnacademy.task.service.impl
  * fileName : ProjectMemberServiceImpl
  * author :  ichunghui
- * date : 2023/06/06 
+ * date : 2023/06/06
  * description :
  * ===========================================================
  * DATE                 AUTHOR                NOTE
@@ -20,12 +20,15 @@ import com.nhnacademy.task.entity.pk.ProjectMemberPk;
 import com.nhnacademy.task.repository.ProjectMemberRepository;
 import com.nhnacademy.task.repository.ProjectRepository;
 import com.nhnacademy.task.service.ProjectMemberService;
+
 import java.util.List;
 import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -36,6 +39,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     private final ProjectRepository projectRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProjectMemberResponseDto> getProjects(Long memberNum, int page) {
         Pageable pageable = PageRequest.of(page, NUM_PER_PAGE);
 
@@ -44,17 +48,13 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<ProjectMemberResponseDto> getProjectAdministratorByProjectNum(Long projectNum) {
-        Optional<Project> project = projectRepository.findById(projectNum);
-
-        ProjectMemberResponseDto projectMemberResponseDto =
-                projectMemberRepository.findByProjectMemberPkProjectNumAndProjectRole(projectNum,
-                        ProjectRole.PROJECT_ROLE_ADMIN.toString());
-
-        return Optional.ofNullable(projectMemberResponseDto);
+        return Optional.ofNullable(projectMemberRepository.findByProjectMemberPkProjectNumAndProjectRole(projectNum,
+                ProjectRole.PROJECT_ROLE_ADMIN.toString()));
     }
-
     @Override
+    @Transactional
     public String registerProjectMember(Long projectNum, Long memberNum) {
         ProjectMemberPk projectMemberPk = ProjectMemberPk.builder()
                 .projectNum(projectNum)
@@ -64,15 +64,13 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
         if (projectMemberRepository.existsById(projectMemberPk)) {
             return "이미 존재하는 멤버입니다";
         }
-        Optional<Project> project = projectRepository.findById(projectNum);
 
-        if (project.isEmpty()) {
-            return "존재하지 않는 프로젝트 입니다.";
-        }
+        Project project = projectRepository.findById(projectNum)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트 입니다."));
 
         ProjectMember projectMember = ProjectMember.builder()
                 .projectMemberPk(projectMemberPk)
-                .project(project.get())
+                .project(project)
                 .projectRole(ProjectRole.PROJECT_ROLE_USER)
                 .build();
 
@@ -81,3 +79,4 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
         return "해당 멤버가 저장되었습니다.";
     }
 }
+

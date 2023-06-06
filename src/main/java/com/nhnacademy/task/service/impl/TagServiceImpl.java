@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -32,16 +33,14 @@ public class TagServiceImpl implements TagService {
     private final ProjectRepository projectRepository;
 
     @Override
+    @Transactional
     public String createTag(Long projectNum, String tagTitle) {
-        Optional<Project> project = projectRepository.findById(projectNum);
-
-        if (project.isEmpty()) {
-            return "해당 프로젝트가 존재하지 않습니다.";
-        }
+        Project project = projectRepository.findById(projectNum)
+                .orElseThrow(() -> new IllegalArgumentException("해당 프로젝트가 존재하지 않습니다."));
 
         Tag tag = Tag.builder()
                 .tagTitle(tagTitle)
-                .project(project.get())
+                .project(project)
                 .build();
 
         tagRepository.save(tag);
@@ -50,39 +49,42 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TagResponseDto> findAllTag(Long projectNum) {
         Project project = projectRepository.findById(projectNum)
-                .orElseThrow(() -> new RuntimeException("해당 프로젝트가 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 프로젝트가 존재하지 않습니다."));
         return tagRepository.findByProject(project);
     }
 
     @Override
+    @Transactional
     public String updateTag(Long projectNum, Long tagNum, String tagTitle) {
-        Optional<Tag> tag = tagRepository.findById(tagNum);
+        Tag updateTag = tagRepository.findById(tagNum)
+                .orElseThrow(() -> new IllegalArgumentException("해당 tag가 존재하지 않습니다."));
 
-        if (tag.isEmpty()) {
-            return "해당 tag가 존재하지 않습니다.";
-        }
-
-        Tag updateTag = tag.get();
         updateTag.setTagTitle(tagTitle);
-
         tagRepository.save(updateTag);
 
         return "해당 태그가 수정되었습니다.";
     }
 
     @Override
+    @Transactional
     public String deleteTag(Long projectNum, Long tagNum) {
+        if (!tagRepository.existsById(tagNum)) {
+            return "해당 태그가 존재하지 않습니다.";
+        }
+
         tagRepository.deleteById(tagNum);
 
         return "해당 태그가 삭제되었습니다.";
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TagResponseDto> getTagByProjectNum(Long projectNum, Long taskNum) {
         Project project = projectRepository.findById(projectNum)
-                .orElseThrow(() -> new RuntimeException("해당 프로젝트가 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 프로젝트가 존재하지 않습니다."));
         return tagRepository.findByProject(project);
     }
 }

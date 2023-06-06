@@ -2,7 +2,7 @@
  * packageName :  com.nhnacademy.task.service.impl
  * fileName : TaskTagServiceImpl
  * author :  ichunghui
- * date : 2023/06/06 
+ * date : 2023/06/06
  * description :
  * ===========================================================
  * DATE                 AUTHOR                NOTE
@@ -21,11 +21,13 @@ import com.nhnacademy.task.repository.TagRepository;
 import com.nhnacademy.task.repository.TaskRepository;
 import com.nhnacademy.task.repository.TaskTagRepository;
 import com.nhnacademy.task.service.TaskTagService;
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -33,31 +35,28 @@ public class TaskTagServiceImpl implements TaskTagService {
     private final TaskTagRepository taskTagRepository;
     private final TaskRepository taskRepository;
     private final TagRepository tagRepository;
+
     @Override
+    @Transactional(readOnly = true)
     public List<String> getTaskTag(Long projectNum, Long taskNum) {
-        Task task =  taskRepository.findById(taskNum).orElseThrow(() -> new RuntimeException("해당 task가 존재하지 않습니다"));
+        Task task =  taskRepository.findById(taskNum)
+                .orElseThrow(() -> new IllegalArgumentException("해당 task가 존재하지 않습니다"));
 
-        List<TaskTagResponseDto> taskTag = taskTagRepository.findByTask(task);
-        List<String> taskTagTitle = new ArrayList<>();
-        for (TaskTagResponseDto taskTagRespondDto : taskTag) {
-            taskTagTitle.add(taskTagRespondDto.getTag().getTagTitle());
-        }
+        List<TaskTagResponseDto> taskTags = taskTagRepository.findByTask(task);
 
-        return taskTagTitle;
+        return taskTags.stream()
+                .map(taskTagResponseDto -> taskTagResponseDto.getTag().getTagTitle())
+                .collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public String registerTaskTag(Long projectNum, Long taskNum, Long tagNum) {
-        Optional<Task> task = taskRepository.findById(taskNum);
+        Task task = taskRepository.findById(taskNum)
+                .orElseThrow(() -> new IllegalArgumentException("해당 task가 존재하지 않습니다"));
 
-        if (task.isEmpty()) {
-            return "해당 task가 존재하지 않습니다";
-        }
-
-        Optional<Tag> tag = tagRepository.findById(tagNum);
-        if (tag.isEmpty()) {
-            return "해당 tag가 프로젝트 내에 존재하지 않습니다";
-        }
+        Tag tag = tagRepository.findById(tagNum)
+                .orElseThrow(() -> new IllegalArgumentException("해당 tag가 프로젝트 내에 존재하지 않습니다"));
 
         TaskTagPk taskTagPk = TaskTagPk.builder()
                 .taskNum(taskNum)
@@ -66,8 +65,8 @@ public class TaskTagServiceImpl implements TaskTagService {
 
         TaskTag taskTag = TaskTag.builder()
                 .taskTagPk(taskTagPk)
-                .task(task.get())
-                .tag(tag.get())
+                .task(task)
+                .tag(tag)
                 .build();
 
         taskTagRepository.save(taskTag);
