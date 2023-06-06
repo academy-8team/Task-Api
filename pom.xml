@@ -11,8 +11,8 @@
     <groupId>com.nhnacademy</groupId>
     <artifactId>Project</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Project</name>
-    <description>Project</description>
+    <name>Task</name>
+    <description>Task</description>
     <properties>
         <java.version>11</java.version>
     </properties>
