@@ -1,58 +1,29 @@
+/**
+ * packageName :  com.nhnacademy.task.service
+ * fileName : MilestoneService
+ * author :  ichunghui
+ * date : 2023/06/06 
+ * description :
+ * ===========================================================
+ * DATE                 AUTHOR                NOTE
+ * -----------------------------------------------------------
+ * 2023/06/06                ichunghui             최초 생성
+ */
+
 package com.nhnacademy.task.service;
 
-import com.nhnacademy.task.entity.Milestone;
-import com.nhnacademy.task.entity.Project;
-import com.nhnacademy.task.mapper.MilestoneMapper;
-import com.nhnacademy.task.repository.MilestoneRepository;
-import com.nhnacademy.task.repository.ProjectRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Service
-@RequiredArgsConstructor
-public class MilestoneService {
+public interface MilestoneService {
+    String createMilestone(Long projectNum, String milestoneTitle);
 
-    private final MilestoneRepository milestoneRepository;
-    private final ProjectRepository projectRepository;
-    private final MilestoneMapper milestoneMapper;
+    List<com.nhnacademy.task.dto.respond.MilestoneResponseDto> findAllMilestone(Long projectNum);
 
-    public MilestoneDto createMilestone(Long projectId, CreateUpdateMilestoneDto milestoneDto) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
-        Milestone milestone = milestoneMapper.toEntity(milestoneDto, project);
-        Milestone savedMilestone = milestoneRepository.save(milestone);
-        return milestoneMapper.toDto(savedMilestone);
-    }
+    String updateTag(Long projectNum, Long milestoneNum, String milestoneTitle);
 
-    public List<MilestoneDto> getMilestones(Long projectId) {
-        return milestoneRepository.findByProjectId(projectId)
-                .stream()
-                .map(milestoneMapper::toDto)
-                .collect(Collectors.toList());
-    }
+    String deleteTag(Long projectNum, Long milestoneNum);
 
-    public MilestoneDto getMilestone(Long projectId, Long milestoneId) {
-        Milestone milestone = getMilestoneEntity(projectId, milestoneId);
-        return milestoneMapper.toDto(milestone);
-    }
+    List<com.nhnacademy.task.dto.respond.MilestoneResponseDto> getMilestoneByProjectNum(Long projectNum, Long taskNum);
 
-    public MilestoneDto updateMilestone(Long projectId, Long milestoneId, CreateUpdateMilestoneDto milestoneDto) {
-        Milestone milestone = getMilestoneEntity(projectId, milestoneId);
-        milestone.setName(milestoneDto.getName());
-        Milestone updatedMilestone = milestoneRepository.save(milestone);
-        return milestoneMapper.toDto(updatedMilestone);
-    }
-
-    public void deleteMilestone(Long projectId, Long milestoneId) {
-        Milestone milestone = getMilestoneEntity(projectId, milestoneId);
-        milestoneRepository.delete(milestone);
-    }
-
-    private Milestone getMilestoneEntity(Long projectId, Long milestoneId) {
-        return milestoneRepository.findByIdAndProjectId(milestoneId, projectId)
-                .orElseThrow(() -> new RuntimeException("Milestone not found"));
-    }
+    String getMilestoneByTaskNum(Long projectNum, Long taskNum);
 }

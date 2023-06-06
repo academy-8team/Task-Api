@@ -1,39 +1,36 @@
+/**
+ * packageName :  com.nhnacademy.task.service
+ * fileName : TaskService
+ * author :  ichunghui
+ * date : 2023/06/06 
+ * description :
+ * ===========================================================
+ * DATE                 AUTHOR                NOTE
+ * -----------------------------------------------------------
+ * 2023/06/06                ichunghui             최초 생성
+ */
+
 package com.nhnacademy.task.service;
 
-import com.nhnacademy.task.entity.Milestone;
-import com.nhnacademy.task.repository.MilestoneRepository;
-import com.nhnacademy.task.repository.TaskRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.nhnacademy.task.dto.request.TaskRequestDto;
+import com.nhnacademy.task.dto.respond.TaskRespondDto;
+import java.util.List;
+import java.util.Optional;
 
-@Service
-@RequiredArgsConstructor
-public class TaskService {
+public interface TaskService {
+    String createTask(TaskRequestDto taskRequestDto,
+                      Long projectNum);
 
-    private final TaskRepository taskRepository;
-    private final MilestoneRepository milestoneRepository;
+    Optional<TaskRespondDto> findTaskDetail(Long projectNum, Long taskNum);
 
-    public Task createTask(Long milestoneId, Task task) {
-        Milestone milestone = milestoneRepository.findById(milestoneId)
-                .orElseThrow(() -> new RuntimeException("Milestone not found"));
-        task.setTaskMileStones(milestone.getTaskMileStones());
-        return taskRepository.save(task);
-    }
+    List<TaskRespondDto> findTaskAll(Long projectNum);
 
+    String updateTask(TaskRequestDto taskRequestDto, Long projectNum, Long taskNum);
 
-    public Task getTask(Long projectId, Long taskId) {
-        return taskRepository.findByIdAndProjectId(taskId, projectId)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
-    }
+    String deleteTask(Long projectNum, Long taskNum);
 
-    public Task updateTask(Long projectId, Long taskId, Task updatedTask) {
-        Task existingTask = getTask(projectId, taskId);
-        existingTask.setContent(updatedTask.getContent());
-        return taskRepository.save(existingTask);
-    }
+    String registerMilestone(Long projectNum, Long taskNum, Long milestoneNum);
 
-    public void deleteTask(Long projectId, Long taskId) {
-        Task task = getTask(projectId, taskId);
-        taskRepository.delete(task);
-    }
+    String registerTag(Long projectNum, Long taskNum, Long tagNum);
 }
+

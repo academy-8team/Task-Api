@@ -1,6 +1,6 @@
 /**
  * packageName :  com.nhnacademy.task.repository
- * fileName : ProjectRepository
+ * fileName : TaskTagRepository
  * author :  ichunghui
  * date : 2023/06/06 
  * description :
@@ -12,13 +12,13 @@
 
 package com.nhnacademy.task.repository;
 
-import com.nhnacademy.task.entity.Project;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.nhnacademy.task.dto.respond.TaskTagRespondDto;
+import com.nhnacademy.task.entity.Task;
+import com.nhnacademy.task.entity.TaskTag;
+import com.nhnacademy.task.entity.pk.TaskTagPk;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProjectRepository extends JpaRepository<Project, Long> {
-    Page<com.nhnacademy.task.dto.respond.ProjectResponseDto> findAllBy(Pageable pageable);
-
-    com.nhnacademy.task.dto.respond.ProjectResponseDto findByProjectNum(Long projectNum);
+public interface TaskTagRepository extends JpaRepository<TaskTag, TaskTagPk> {
+    List<TaskTagRespondDto> findByTask(Task task);
 }

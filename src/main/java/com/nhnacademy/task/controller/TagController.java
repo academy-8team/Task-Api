@@ -12,9 +12,11 @@
 
 package com.nhnacademy.task.controller;
 
-import com.nhnacademy.task.dto.respond.TagRespondDto;
-import com.nhnacademy.task.service.TagService;
+import com.nhnacademy.task.dto.response.TagResponseDto;
+
 import java.util.List;
+
+import com.nhnacademy.task.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +35,7 @@ public class TagController {
     }
 
     @GetMapping("/project/{projectNum}/tag")
-    public List<TagRespondDto> findAllTag(@PathVariable(value = "projectNum") Long projectNum) {
+    public List<TagResponseDto> findAllTag(@PathVariable(value = "projectNum") Long projectNum) {
         return tagService.findAllTag(projectNum);
     }
 
@@ -51,7 +53,7 @@ public class TagController {
     }
 
     @GetMapping("/project/{projectNum}/task/{taskNum}/tag/select")
-    public List<TagRespondDto> getTagByProjectNum(@PathVariable(value = "projectNum") Long projectNum,
+    public List<TagResponseDto> getTagByProjectNum(@PathVariable(value = "projectNum") Long projectNum,
                                                   @PathVariable(value = "taskNum") Long taskNum) {
         return tagService.getTagByProjectNum(projectNum, taskNum);
     }

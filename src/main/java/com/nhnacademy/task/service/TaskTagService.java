@@ -1,6 +1,6 @@
 /**
  * packageName :  com.nhnacademy.task.service
- * fileName : TagService
+ * fileName : TaskTagService
  * author :  ichunghui
  * date : 2023/06/06 
  * description :
@@ -12,17 +12,11 @@
 
 package com.nhnacademy.task.service;
 
-import com.nhnacademy.task.dto.respond.TagRespondDto;
+import com.nhnacademy.task.dto.respond.TaskTagRespondDto;
 import java.util.List;
 
-public interface TagService {
-    String createTag(Long projectNum, String tagTitle);
+public interface TaskTagService {
+    List<String> getTaskTag(Long projectNum, Long taskNum);
 
-    List<TagRespondDto> findAllTag(Long projectNum);
-
-    String updateTag(Long projectNum, Long tagNum, String tagTitle);
-
-    String deleteTag(Long projectNum, Long tagNum);
-
-    List<TagRespondDto> getTagByProjectNum(Long projectNum, Long taskNum);
+    String registerTaskTag(Long projectNum, Long taskNum, Long tagNum);
 }

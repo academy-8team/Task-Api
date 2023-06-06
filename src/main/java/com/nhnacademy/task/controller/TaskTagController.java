@@ -12,7 +12,7 @@
 
 package com.nhnacademy.task.controller;
 
-import com.nhnacademy.task.dto.respond.TaskTagRespondDto;
+import com.nhnacademy.task.dto.response.TaskTagResponseDto;
 import com.nhnacademy.task.service.TaskTagService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

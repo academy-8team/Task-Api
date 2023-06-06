@@ -12,6 +12,18 @@
 
 package com.nhnacademy.task.dto.response;
 
-public class CommentRequestDto {
-}
+import com.nhnacademy.task.entity.Task;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
+@AllArgsConstructor
+@Data
+public class CommentResponseDto {
+    private Long commentNum;
+
+    private Task task;
+
+    private String commentContent;
+
+    private String writerId;
+}

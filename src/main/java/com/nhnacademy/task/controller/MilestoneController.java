@@ -10,11 +10,11 @@
  * 2023/06/02                ichunghui             최초 생성
  */
 
-import com.nhnacademy.task.dto.respond.MilestoneRespondDto;
-import com.nhnacademy.task.dto.respond.TagRespondDto;
-import com.nhnacademy.task.service.MilestoneService;
-import com.nhnacademy.task.service.TagService;
+import com.nhnacademy.task.dto.response.MilestoneResponseDto;
+
 import java.util.List;
+
+import com.nhnacademy.task.service.MilestoneService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +33,7 @@ public class MilestoneController {
     }
 
     @GetMapping("/project/{projectNum}/milestone")
-    public List<MilestoneRespondDto> findAllTag(@PathVariable(value = "projectNum") Long projectNum) {
+    public List<MilestoneResponseDto> findAllTag(@PathVariable(value = "projectNum") Long projectNum) {
         return milestoneService.findAllMilestone(projectNum);
     }
 
@@ -51,7 +51,7 @@ public class MilestoneController {
     }
 
     @GetMapping("/project/{projectNum}/task/{taskNum}/milestone/select")
-    public List<MilestoneRespondDto> getTagByProjectNum(@PathVariable(value = "projectNum") Long projectNum,
+    public List<MilestoneResponseDto> getTagByProjectNum(@PathVariable(value = "projectNum") Long projectNum,
                                                         @PathVariable(value = "taskNum") Long taskNum) {
         return milestoneService.getMilestoneByProjectNum(projectNum, taskNum);
     }

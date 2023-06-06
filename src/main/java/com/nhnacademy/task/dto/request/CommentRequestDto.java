@@ -12,6 +12,11 @@
 
 package com.nhnacademy.task.dto.request;
 
-public class CommentRequestDto {
-}
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
+@AllArgsConstructor
+@Data
+public class CommentRequestDto {
+    private String commentContent;
+}

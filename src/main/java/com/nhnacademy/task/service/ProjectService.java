@@ -1,44 +1,27 @@
+/**
+ * packageName :  com.nhnacademy.task.service
+ * fileName : ProjectService
+ * author :  ichunghui
+ * date : 2023/06/06 
+ * description :
+ * ===========================================================
+ * DATE                 AUTHOR                NOTE
+ * -----------------------------------------------------------
+ * 2023/06/06                ichunghui             최초 생성
+ */
+
 package com.nhnacademy.task.service;
 
-import com.nhnacademy.task.entity.Project;
-import com.nhnacademy.task.entity.ProjectStatus;
-import com.nhnacademy.task.mapper.ProjectMapper;
-import com.nhnacademy.task.repository.ProjectRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.nhnacademy.task.dto.request.ProjectRequestDto;
 
-@Service
-@RequiredArgsConstructor
-public class ProjectService {
+import java.util.List;
+import java.util.Optional;
 
-    private final ProjectRepository projectRepository;
-    private final ProjectMapper projectMapper;
+public interface ProjectService {
+    List<com.nhnacademy.task.dto.respond.ProjectResponseDto> getProjects(int page);
 
-    public ProjectDto createProject(CreateUpdateProjectDto projectDto) {
-        Project project = projectMapper.toEntity(projectDto);
-        Project savedProject = projectRepository.save(project);
-        return projectMapper.toDto(savedProject);
-    }
+    Optional<com.nhnacademy.task.dto.respond.ProjectResponseDto> makeProject(
+            ProjectRequestDto projectRequestDto, Long memberNum);
 
-    public ProjectDto getProject(Long projectId) {
-        Project project = getProjectEntity(projectId);
-        return projectMapper.toDto(project);
-    }
-
-    public ProjectDto updateProject(Long projectId, CreateUpdateProjectDto projectDto) {
-        Project project = getProjectEntity(projectId);
-        project.setName(projectDto.getName());
-        project.setStatus(ProjectStatus.valueOf(projectDto.getStatus()));
-        Project updatedProject = projectRepository.save(project);
-        return projectMapper.toDto(updatedProject);
-    }
-
-    public void deleteProject(Long projectId) {
-        projectRepository.deleteById(projectId);
-    }
-
-    private Project getProjectEntity(Long projectId) {
-        return projectRepository.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
-    }
+    Optional<com.nhnacademy.task.dto.respond.ProjectResponseDto> getProjectByProjectNum(Long projectNum);
 }

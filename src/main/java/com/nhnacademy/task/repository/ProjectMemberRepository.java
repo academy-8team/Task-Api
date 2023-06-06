@@ -1,6 +1,6 @@
 /**
  * packageName :  com.nhnacademy.task.repository
- * fileName : ProjectRepository
+ * fileName : ProjectMemberRepository
  * author :  ichunghui
  * date : 2023/06/06 
  * description :
@@ -12,13 +12,16 @@
 
 package com.nhnacademy.task.repository;
 
-import com.nhnacademy.task.entity.Project;
+import com.nhnacademy.task.dto.respond.ProjectMemberRespondDto;
+import com.nhnacademy.task.entity.ProjectMember;
+import com.nhnacademy.task.entity.pk.ProjectMemberPk;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProjectRepository extends JpaRepository<Project, Long> {
-    Page<com.nhnacademy.task.dto.respond.ProjectResponseDto> findAllBy(Pageable pageable);
+public interface ProjectMemberRepository extends JpaRepository<ProjectMember, ProjectMemberPk> {
+    Page<ProjectMemberRespondDto> findByProjectMemberPkProjectMemberNum(Long memberNum, Pageable pageable);
 
-    com.nhnacademy.task.dto.respond.ProjectResponseDto findByProjectNum(Long projectNum);
+    ProjectMemberRespondDto findByProjectMemberPkProjectNumAndProjectRole(Long projectNum, String projectRole);
+
 }

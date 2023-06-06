@@ -1,14 +1,22 @@
+/**
+ * packageName :  com.nhnacademy.task.repository
+ * fileName : MilestoneRepository
+ * author :  ichunghui
+ * date : 2023/06/06 
+ * description :
+ * ===========================================================
+ * DATE                 AUTHOR                NOTE
+ * -----------------------------------------------------------
+ * 2023/06/06                ichunghui             최초 생성
+ */
+
 package com.nhnacademy.task.repository;
 
 import com.nhnacademy.task.entity.Milestone;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
+import com.nhnacademy.task.entity.Project;
 import java.util.List;
-import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
 public interface MilestoneRepository extends JpaRepository<Milestone, Long> {
-    List<Milestone> findByProjectId(Long projectId);
-    Optional<Milestone> findByIdAndProjectId(Long id, Long projectId);
+    List<com.nhnacademy.task.dto.respond.MilestoneResponseDto> findByProject(Project project);
 }

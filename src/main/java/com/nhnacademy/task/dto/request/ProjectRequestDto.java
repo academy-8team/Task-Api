@@ -12,6 +12,23 @@
 
 package com.nhnacademy.task.dto.request;
 
-public class ProjectRequestDto {
-}
+import com.nhnacademy.task.entity.ProjectState;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
+@AllArgsConstructor
+@Data
+public class ProjectRequestDto {
+    private Long projectNum;
+
+    private Long projectAdministratorNum;
+
+    private String projectName;
+
+    private String projectDescription;
+
+    @Enumerated(EnumType.STRING)
+    private ProjectState projectState;
+}

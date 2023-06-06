@@ -12,6 +12,20 @@
 
 package com.nhnacademy.task.dto.response;
 
-public class ProjectResponseDto {
-}
+import com.nhnacademy.task.entity.ProjectStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
+@Builder
+@Data
+@AllArgsConstructor
+public class ProjectResponseDto {
+    private Long projectNum;
+
+    private String projectName;
+
+    private String projectDescription;
+
+    private ProjectStatus projectStatus;
+}

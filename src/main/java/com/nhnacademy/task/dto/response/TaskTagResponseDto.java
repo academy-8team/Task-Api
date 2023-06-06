@@ -12,6 +12,21 @@
 
 package com.nhnacademy.task.dto.response;
 
-public class TaskTagResponseDto {
-}
+import com.nhnacademy.task.entity.Project;
+import com.nhnacademy.task.entity.Tag;
+import com.nhnacademy.task.entity.Task;
+import com.nhnacademy.task.entity.pk.TaskTagPk;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
+@Builder
+@Data
+@AllArgsConstructor
+public class TaskTagResponseDto {
+    private TaskTagPk taskTagPk;
+
+    private Tag tag;
+
+    private Task task;
+}

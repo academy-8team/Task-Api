@@ -12,9 +12,7 @@
 
 package com.nhnacademy.task.controller;
 
-import com.nhnacademy.task.dto.respond.ProjectMemberRespondDto;
-import com.nhnacademy.task.dto.respond.ProjectRespondDto;
-import com.nhnacademy.task.entity.ProjectMember;
+import com.nhnacademy.task.dto.response.ProjectMemberResponseDto;
 import com.nhnacademy.task.service.ProjectMemberService;
 import java.util.List;
 import java.util.Optional;
@@ -30,12 +28,12 @@ public class ProjectMemberController {
     private final ProjectMemberService projectMemberService;
 
     @GetMapping("/project/member/{memberNum}")
-    public List<ProjectMemberRespondDto> getProjectList(@PathVariable(name = "memberNum") Long memberNum, @RequestParam(name = "page") int page) {
+    public List<ProjectMemberResponseDto> getProjectList(@PathVariable(name = "memberNum") Long memberNum, @RequestParam(name = "page") int page) {
         return projectMemberService.getProjects(memberNum, page);
     }
 
     @GetMapping("/project/{projectNum}/member/administrator")
-    public Optional<ProjectMemberRespondDto> getProjectAdministrator(@PathVariable(name = "projectNum") Long projectNum) {
+    public Optional<ProjectMemberResponseDto> getProjectAdministrator(@PathVariable(name = "projectNum") Long projectNum) {
         return projectMemberService.getProjectAdministratorByProjectNum(projectNum);
     }
 

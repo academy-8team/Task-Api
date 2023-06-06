@@ -13,16 +13,18 @@
 package com.nhnacademy.task.controller;
 
 import com.nhnacademy.task.dto.request.TaskRequestDto;
-import com.nhnacademy.task.dto.respond.TaskRespondDto;
+
+import com.nhnacademy.task.dto.response.TaskResponseDto;
 import com.nhnacademy.task.service.TaskService;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -33,20 +35,19 @@ public class TaskController {
     public String createTask(@RequestBody TaskRequestDto taskRequestDto,
                              @PathVariable(value = "projectNum") Long projectNum,
                              @PathVariable(value = "memberNum") Long memberNum) {
-        // 일단 해당 프로젝트의 멤버로써 맞는지 확인부터 하자
 
         return taskService.createTask(taskRequestDto, projectNum);
     }
 
     @GetMapping("/project/{projectNum}/task/{taskNum}")
-    public Optional<TaskRespondDto> getTaskDetail(
+    public Optional<TaskResponseDto> getTaskDetail(
             @PathVariable(value = "projectNum") Long projectNum,
             @PathVariable(value = "taskNum") Long taskNum) {
         return taskService.findTaskDetail(projectNum, taskNum);
     }
 
     @GetMapping("/project/{projectNum}/task")
-    public List<TaskRespondDto> getTaskAll(@PathVariable(value = "projectNum") Long projectNum) {
+    public List<TaskResponseDto> getTaskAll(@PathVariable(value = "projectNum") Long projectNum) {
         return taskService.findTaskAll(projectNum);
     }
 
