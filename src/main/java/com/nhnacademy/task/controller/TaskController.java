@@ -17,11 +17,8 @@ import com.nhnacademy.task.dto.request.TaskRequestDto;
 import com.nhnacademy.task.dto.response.TaskResponseDto;
 import com.nhnacademy.task.service.TaskService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,49 +29,56 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping("/project/{projectNum}/task/create/{memberNum}")
-    public String createTask(@RequestBody TaskRequestDto taskRequestDto,
-                             @PathVariable(value = "projectNum") Long projectNum,
-                             @PathVariable(value = "memberNum") Long memberNum) {
+    public ResponseEntity<String> createTask(@RequestBody TaskRequestDto taskRequestDto,
+                                             @PathVariable(value = "projectNum") Long projectNum,
+                                             @PathVariable(value = "memberNum") Long memberNum) {
 
-        return taskService.createTask(taskRequestDto, projectNum);
+        String result = taskService.createTask(taskRequestDto, projectNum);
+        return ResponseEntity.ok().body(result);
     }
 
     @GetMapping("/project/{projectNum}/task/{taskNum}")
-    public Optional<TaskResponseDto> getTaskDetail(
+    public ResponseEntity<Optional<TaskResponseDto>> getTaskDetail(
             @PathVariable(value = "projectNum") Long projectNum,
             @PathVariable(value = "taskNum") Long taskNum) {
-        return taskService.findTaskDetail(projectNum, taskNum);
+        Optional<TaskResponseDto> task = taskService.findTaskDetail(projectNum, taskNum);
+        return ResponseEntity.ok().body(task);
     }
 
     @GetMapping("/project/{projectNum}/task")
-    public List<TaskResponseDto> getTaskAll(@PathVariable(value = "projectNum") Long projectNum) {
-        return taskService.findTaskAll(projectNum);
+    public ResponseEntity<List<TaskResponseDto>> getTaskAll(@PathVariable(value = "projectNum") Long projectNum) {
+        List<TaskResponseDto> tasks = taskService.findTaskAll(projectNum);
+        return ResponseEntity.ok().body(tasks);
     }
 
-    @PostMapping("/project/{projectNum}/task/{taskNum}/update")
-    public String updateTask(@RequestBody TaskRequestDto taskRequestDto,
-                             @PathVariable(value = "projectNum") Long projectNum,
-                             @PathVariable(value = "taskNum") Long taskNum) {
-        return taskService.updateTask(taskRequestDto, projectNum, taskNum);
+    @PutMapping("/project/{projectNum}/task/{taskNum}/update")
+    public ResponseEntity<String> updateTask(@RequestBody TaskRequestDto taskRequestDto,
+                                             @PathVariable(value = "projectNum") Long projectNum,
+                                             @PathVariable(value = "taskNum") Long taskNum) {
+        String result = taskService.updateTask(taskRequestDto, projectNum, taskNum);
+        return ResponseEntity.ok().body(result);
     }
 
-    @GetMapping("/project/{projectNum}/task/{taskNum}/delete")
-    public String deleteTask(@PathVariable(value = "projectNum") Long projectNum,
-                             @PathVariable(value = "taskNum") Long taskNum) {
-        return taskService.deleteTask(projectNum, taskNum);
+    @DeleteMapping("/project/{projectNum}/task/{taskNum}/delete")
+    public ResponseEntity<String> deleteTask(@PathVariable(value = "projectNum") Long projectNum,
+                                             @PathVariable(value = "taskNum") Long taskNum) {
+        String result = taskService.deleteTask(projectNum, taskNum);
+        return ResponseEntity.ok().body(result);
     }
 
-    @GetMapping("/project/{projectNum}/task/{taskNum}/milestone/{milestoneNum}/register")
-    public String registerMilestone(@PathVariable(value = "projectNum") Long projectNum,
-                                    @PathVariable(value = "taskNum") Long taskNum,
-                                    @PathVariable(value = "milestoneNum") Long milestoneNum) {
-        return taskService.registerMilestone(projectNum, taskNum, milestoneNum);
+    @PutMapping("/project/{projectNum}/task/{taskNum}/milestone/{milestoneNum}/register")
+    public ResponseEntity<String> registerMilestone(@PathVariable(value = "projectNum") Long projectNum,
+                                                    @PathVariable(value = "taskNum") Long taskNum,
+                                                    @PathVariable(value = "milestoneNum") Long milestoneNum) {
+        String result = taskService.registerMilestone(projectNum, taskNum, milestoneNum);
+        return ResponseEntity.ok().body(result);
     }
 
-    @GetMapping("/project/{projectNum}/task/{taskNum}/tag/{tagNum}/tastTag/register")
-    public String registerTag(@PathVariable(value = "projectNum") Long projectNum,
-                              @PathVariable(value = "taskNum") Long taskNum,
-                              @PathVariable(value = "tagNum") Long tagNum) {
-        return taskService.registerTag(projectNum, taskNum, tagNum);
+    @PutMapping("/project/{projectNum}/task/{taskNum}/tag/{tagNum}/tastTag/register")
+    public ResponseEntity<String> registerTag(@PathVariable(value = "projectNum") Long projectNum,
+                                              @PathVariable(value = "taskNum") Long taskNum,
+                                              @PathVariable(value = "tagNum") Long tagNum) {
+        String result = taskService.registerTag(projectNum, taskNum, tagNum);
+        return ResponseEntity.ok().body(result);
     }
 }
