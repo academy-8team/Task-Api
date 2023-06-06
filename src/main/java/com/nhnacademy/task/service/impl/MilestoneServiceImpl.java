@@ -20,9 +20,9 @@ import com.nhnacademy.task.repository.ProjectRepository;
 import com.nhnacademy.task.repository.TaskRepository;
 import com.nhnacademy.task.service.MilestoneService;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -32,15 +32,14 @@ public class MilestoneServiceImpl implements MilestoneService {
     private final TaskRepository taskRepository;
 
     @Override
+    @Transactional
     public String createMilestone(Long projectNum, String milestoneTitle) {
-        Optional<Project> project = projectRepository.findById(projectNum);
+        Project project = projectRepository.findById(projectNum)
+                .orElseThrow(() -> new IllegalArgumentException("해당 프로젝트가 존재하지 않습니다."));
 
-        if (project.isEmpty()) {
-            return "해당 프로젝트가 존재하지 않습니다.";
-        }
         Milestone milestone = Milestone.builder()
                 .milestoneTitle(milestoneTitle)
-                .project(project.get())
+                .project(project)
                 .build();
 
         milestoneRepository.save(milestone);
@@ -49,23 +48,19 @@ public class MilestoneServiceImpl implements MilestoneService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MilestoneResponseDto> findAllMilestone(Long projectNum) {
         Project project = projectRepository.findById(projectNum)
-                .orElseThrow(() -> new RuntimeException("해당 프로젝트가 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 프로젝트가 존재하지 않습니다."));
+
         return milestoneRepository.findByProject(project);
     }
 
     @Override
+    @Transactional
     public String updateTag(Long projectNum, Long milestoneNum, String milestoneTitle) {
-        Optional<Milestone> milestone = milestoneRepository.findById(milestoneNum);
-
-        if (milestone.isEmpty()) {
-            return "해당 마일스톤이 존재하지 않습니다.";
-        }
-
-        Milestone updateMilestone = milestone.get();
-
-
+        Milestone updateMilestone = milestoneRepository.findById(milestoneNum)
+                .orElseThrow(() -> new IllegalArgumentException("해당 마일스톤이 존재하지 않습니다."));
 
         updateMilestone.setMilestoneTitle(milestoneTitle);
 
@@ -75,16 +70,23 @@ public class MilestoneServiceImpl implements MilestoneService {
     }
 
     @Override
+    @Transactional
     public String deleteTag(Long projectNum, Long milestoneNum) {
+        if (!milestoneRepository.existsById(milestoneNum)) {
+            return "해당 마일스톤이 존재하지 않습니다.";
+        }
+
         milestoneRepository.deleteById(milestoneNum);
 
         return "해당 마일스톤이 삭제되었습니다";
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MilestoneResponseDto> getMilestoneByProjectNum(Long projectNum, Long taskNum) {
         Project project = projectRepository.findById(projectNum)
-                .orElseThrow(() -> new RuntimeException("해당 프로젝트가 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 프로젝트가 존재하지 않습니다."));
+
         return milestoneRepository.findByProject(project);
     }
 

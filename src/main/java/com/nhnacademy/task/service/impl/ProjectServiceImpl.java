@@ -28,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -38,6 +39,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectMemberRepository projectMemberRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProjectResponseDto> getProjects(int page) {
         Pageable pageable = PageRequest.of(page, NUM_PER_PAGE);
 
@@ -45,8 +47,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Optional<ProjectResponseDto> makeProject(
-            ProjectRequestDto projectRequestDto, Long memberNum) {
+    @Transactional
+    public Optional<ProjectResponseDto> makeProject(ProjectRequestDto projectRequestDto, Long memberNum) {
         Project project = Project.builder()
                 .projectName(projectRequestDto.getProjectName())
                 .projectDescription(projectRequestDto.getProjectDescription())
@@ -74,6 +76,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<ProjectResponseDto> getProjectByProjectNum(Long projectNum) {
         ProjectResponseDto projectResponseDto = projectRepository.findByProjectNum(projectNum);
 

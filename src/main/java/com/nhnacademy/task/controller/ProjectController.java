@@ -20,13 +20,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-
 @RequiredArgsConstructor
 @RestController
 public class ProjectController {
     private final ProjectService projectService;
-
-
 
     @PostMapping("/project/create/{memberNum}")
     public Optional<ProjectResponseDto> createProject(@RequestBody ProjectRequestDto projectRequestDto,
