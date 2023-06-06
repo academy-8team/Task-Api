@@ -17,7 +17,6 @@ import com.nhnacademy.task.entity.Project;
 import com.nhnacademy.task.entity.Tag;
 import com.nhnacademy.task.repository.ProjectRepository;
 import com.nhnacademy.task.repository.TagRepository;
-import com.nhnacademy.task.repository.TaskRepository;
 import com.nhnacademy.task.service.TagService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
