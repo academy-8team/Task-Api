@@ -20,7 +20,6 @@ import com.nhnacademy.task.repository.TagRepository;
 import com.nhnacademy.task.repository.TaskRepository;
 import com.nhnacademy.task.service.TagService;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
-    private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
 
     @Override
