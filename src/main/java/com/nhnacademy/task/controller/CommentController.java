@@ -32,7 +32,7 @@ public class CommentController {
                                                   @RequestParam(value = "writerId") String writerId,
                                                   @RequestParam(value = "commentContent") String commentContent) {
         String result = commentService.registerComment(commentContent, projectNum, taskNum, writerId);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @GetMapping("/project/{projectNum}/task/{taskNum}/comment/all")
@@ -40,7 +40,7 @@ public class CommentController {
             @PathVariable(value = "projectNum") Long projectNum,
             @PathVariable(value = "taskNum") Long taskNum) {
         List<CommentResponseDto> comments = commentService.getAllComment(projectNum, taskNum);
-        return new ResponseEntity<>(comments, HttpStatus.OK);
+        return ResponseEntity.ok(comments);
     }
 
     @PutMapping("/project/{projectNum}/task/{taskNum}/comment/{commentNum}/update")
@@ -49,7 +49,7 @@ public class CommentController {
                                                 @PathVariable(value = "taskNum") Long taskNum,
                                                 @PathVariable(value = "commentNum") Long commentNum) {
         String result = commentService.updateComment(commentContent, projectNum, taskNum, commentNum);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/project/{projectNum}/task/{taskNum}/comment/{commentNum}/delete")
@@ -57,6 +57,6 @@ public class CommentController {
                                                 @PathVariable(value = "taskNum") Long taskNum,
                                                 @PathVariable(value = "commentNum") Long commentNum) {
         String result = commentService.deleteComment(projectNum, taskNum, commentNum);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return ResponseEntity.ok(result);
     }
 }
