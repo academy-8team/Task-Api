@@ -58,7 +58,7 @@ public class MilestoneServiceImpl implements MilestoneService {
 
     @Override
     @Transactional
-    public String updateTag(Long projectNum, Long milestoneNum, String milestoneTitle) {
+    public String updateMilestone(Long projectNum, Long milestoneNum, String milestoneTitle) {
         Milestone updateMilestone = milestoneRepository.findById(milestoneNum)
                 .orElseThrow(() -> new IllegalArgumentException("해당 마일스톤이 존재하지 않습니다."));
 
@@ -71,7 +71,7 @@ public class MilestoneServiceImpl implements MilestoneService {
 
     @Override
     @Transactional
-    public String deleteTag(Long projectNum, Long milestoneNum) {
+    public String deleteMilestone(Long projectNum, Long milestoneNum) {
         if (!milestoneRepository.existsById(milestoneNum)) {
             return "해당 마일스톤이 존재하지 않습니다.";
         }
