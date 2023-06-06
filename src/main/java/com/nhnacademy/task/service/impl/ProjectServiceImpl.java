@@ -50,7 +50,7 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = Project.builder()
                 .projectName(projectRequestDto.getProjectName())
                 .projectDescription(projectRequestDto.getProjectDescription())
-                .projectState(ProjectStatus.ACTIVE)
+                .projectStatus(ProjectStatus.ACTIVE)
                 .build();
 
         Long projectNum = projectRepository.save(project).getProjectNum();

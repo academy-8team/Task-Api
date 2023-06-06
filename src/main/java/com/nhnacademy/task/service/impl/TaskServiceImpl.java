@@ -63,9 +63,7 @@ public class TaskServiceImpl implements TaskService {
     public Optional<TaskResponseDto> findTaskDetail(Long projectNum, Long taskNum) {
         Project project = projectRepository.findById(projectNum)
                 .orElseThrow(() -> new RuntimeException("해당 프로젝트가 존재하지 않습니다."));
-//        if (project.isEmpty()) {
-//            return TaskResponseDto.builder().build();
-//        }
+
         TaskResponseDto taskResponseDto =
                 taskRepository.findByProjectAndTaskNum(project, taskNum);
 

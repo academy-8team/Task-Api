@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProjectService {
-    List<com.nhnacademy.task.dto.response.ProjectResponseDto> getProjects(int page);
+    List<ProjectResponseDto> getProjects(int page);
 
     Optional<ProjectResponseDto> makeProject(
             ProjectRequestDto projectRequestDto, Long memberNum);

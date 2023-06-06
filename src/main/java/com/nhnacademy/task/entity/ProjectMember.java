@@ -1,4 +1,4 @@
-package com.nhnacademy.task.entity; /**
+/**
  * packageName :  com.nhnacademy.task.entity
  * fileName : ProjectMember
  * author :  ichunghui
@@ -10,13 +10,13 @@ package com.nhnacademy.task.entity; /**
  * 2023/06/06                ichunghui             최초 생성
  */
 
+package com.nhnacademy.task.entity;
+
 import com.nhnacademy.task.entity.pk.ProjectMemberPk;
-import javax.persistence.Embedded;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;

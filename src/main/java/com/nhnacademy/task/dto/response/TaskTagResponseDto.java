@@ -12,7 +12,6 @@
 
 package com.nhnacademy.task.dto.response;
 
-import com.nhnacademy.task.entity.Project;
 import com.nhnacademy.task.entity.Tag;
 import com.nhnacademy.task.entity.Task;
 import com.nhnacademy.task.entity.pk.TaskTagPk;

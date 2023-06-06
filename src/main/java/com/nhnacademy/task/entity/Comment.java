@@ -1,10 +1,8 @@
 package com.nhnacademy.task.entity;
 
-import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @Builder
 @AllArgsConstructor

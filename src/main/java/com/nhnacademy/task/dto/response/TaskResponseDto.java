@@ -14,9 +14,6 @@ package com.nhnacademy.task.dto.response;
 
 import com.nhnacademy.task.entity.Milestone;
 import com.nhnacademy.task.entity.Project;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
