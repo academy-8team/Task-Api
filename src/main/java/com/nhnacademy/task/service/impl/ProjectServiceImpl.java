@@ -13,10 +13,11 @@
 package com.nhnacademy.task.service.impl;
 
 import com.nhnacademy.task.dto.request.ProjectRequestDto;
+import com.nhnacademy.task.dto.response.ProjectResponseDto;
 import com.nhnacademy.task.entity.Project;
 import com.nhnacademy.task.entity.ProjectMember;
 import com.nhnacademy.task.entity.ProjectRole;
-import com.nhnacademy.task.entity.ProjectState;
+import com.nhnacademy.task.entity.ProjectStatus;
 import com.nhnacademy.task.entity.pk.ProjectMemberPk;
 import com.nhnacademy.task.repository.ProjectMemberRepository;
 import com.nhnacademy.task.repository.ProjectRepository;
@@ -37,19 +38,19 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectMemberRepository projectMemberRepository;
 
     @Override
-    public List<com.nhnacademy.task.dto.respond.ProjectResponseDto> getProjects(int page) {
+    public List<ProjectResponseDto> getProjects(int page) {
         Pageable pageable = PageRequest.of(page, NUM_PER_PAGE);
 
         return projectRepository.findAllBy(pageable).getContent();
     }
 
     @Override
-    public Optional<com.nhnacademy.task.dto.respond.ProjectResponseDto> makeProject(
+    public Optional<ProjectResponseDto> makeProject(
             ProjectRequestDto projectRequestDto, Long memberNum) {
         Project project = Project.builder()
                 .projectName(projectRequestDto.getProjectName())
                 .projectDescription(projectRequestDto.getProjectDescription())
-                .projectState(ProjectState.ACTIVE)
+                .projectStatus(ProjectStatus.ACTIVE)
                 .build();
 
         Long projectNum = projectRepository.save(project).getProjectNum();
@@ -67,15 +68,15 @@ public class ProjectServiceImpl implements ProjectService {
 
         projectMemberRepository.save(projectMember);
 
-        com.nhnacademy.task.dto.respond.ProjectResponseDto projectRespondDto = projectRepository.findByProjectNum(projectNum);
+        ProjectResponseDto projectResponseDto = projectRepository.findByProjectNum(projectNum);
 
-        return Optional.ofNullable(projectRespondDto);
+        return Optional.ofNullable(projectResponseDto);
     }
 
     @Override
-    public Optional<com.nhnacademy.task.dto.respond.ProjectResponseDto> getProjectByProjectNum(Long projectNum) {
-        com.nhnacademy.task.dto.respond.ProjectResponseDto projectRespondDto = projectRepository.findByProjectNum(projectNum);
+    public Optional<ProjectResponseDto> getProjectByProjectNum(Long projectNum) {
+        ProjectResponseDto projectResponseDto = projectRepository.findByProjectNum(projectNum);
 
-        return Optional.ofNullable(projectRespondDto);
+        return Optional.ofNullable(projectResponseDto);
     }
 }

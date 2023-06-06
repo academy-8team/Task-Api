@@ -12,9 +12,10 @@
 
 package com.nhnacademy.task.dto.request;
 
-import com.nhnacademy.task.entity.ProjectState;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+
+import com.nhnacademy.task.entity.ProjectStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -30,5 +31,5 @@ public class ProjectRequestDto {
     private String projectDescription;
 
     @Enumerated(EnumType.STRING)
-    private ProjectState projectState;
+    private ProjectStatus projectStatus;
 }

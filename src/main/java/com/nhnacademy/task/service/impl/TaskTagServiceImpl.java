@@ -12,7 +12,7 @@
 
 package com.nhnacademy.task.service.impl;
 
-import com.nhnacademy.task.dto.respond.TaskTagRespondDto;
+import com.nhnacademy.task.dto.response.TaskTagResponseDto;
 import com.nhnacademy.task.entity.Tag;
 import com.nhnacademy.task.entity.Task;
 import com.nhnacademy.task.entity.TaskTag;
@@ -37,9 +37,9 @@ public class TaskTagServiceImpl implements TaskTagService {
     public List<String> getTaskTag(Long projectNum, Long taskNum) {
         Task task =  taskRepository.findById(taskNum).orElseThrow(() -> new RuntimeException("해당 task가 존재하지 않습니다"));
 
-        List<TaskTagRespondDto> taskTag = taskTagRepository.findByTask(task);
+        List<TaskTagResponseDto> taskTag = taskTagRepository.findByTask(task);
         List<String> taskTagTitle = new ArrayList<>();
-        for (TaskTagRespondDto taskTagRespondDto : taskTag) {
+        for (TaskTagResponseDto taskTagRespondDto : taskTag) {
             taskTagTitle.add(taskTagRespondDto.getTag().getTagTitle());
         }
 

@@ -12,6 +12,7 @@
 
 package com.nhnacademy.task.service.impl;
 
+import com.nhnacademy.task.dto.response.MilestoneResponseDto;
 import com.nhnacademy.task.entity.Milestone;
 import com.nhnacademy.task.entity.Project;
 import com.nhnacademy.task.repository.MilestoneRepository;
@@ -48,7 +49,7 @@ public class MilestoneServiceImpl implements MilestoneService {
     }
 
     @Override
-    public List<com.nhnacademy.task.dto.respond.MilestoneResponseDto> findAllMilestone(Long projectNum) {
+    public List<MilestoneResponseDto> findAllMilestone(Long projectNum) {
         Project project = projectRepository.findById(projectNum)
                 .orElseThrow(() -> new RuntimeException("해당 프로젝트가 존재하지 않습니다."));
         return milestoneRepository.findByProject(project);
@@ -81,7 +82,7 @@ public class MilestoneServiceImpl implements MilestoneService {
     }
 
     @Override
-    public List<com.nhnacademy.task.dto.respond.MilestoneResponseDto> getMilestoneByProjectNum(Long projectNum, Long taskNum) {
+    public List<MilestoneResponseDto> getMilestoneByProjectNum(Long projectNum, Long taskNum) {
         Project project = projectRepository.findById(projectNum)
                 .orElseThrow(() -> new RuntimeException("해당 프로젝트가 존재하지 않습니다."));
         return milestoneRepository.findByProject(project);

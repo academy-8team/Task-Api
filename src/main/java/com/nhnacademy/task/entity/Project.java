@@ -1,13 +1,10 @@
 package com.nhnacademy.task.entity;
 
-import com.sun.istack.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor

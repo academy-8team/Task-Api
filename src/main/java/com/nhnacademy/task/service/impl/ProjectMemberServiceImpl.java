@@ -12,7 +12,7 @@
 
 package com.nhnacademy.task.service.impl;
 
-import com.nhnacademy.task.dto.respond.ProjectMemberRespondDto;
+import com.nhnacademy.task.dto.response.ProjectMemberResponseDto;
 import com.nhnacademy.task.entity.Project;
 import com.nhnacademy.task.entity.ProjectMember;
 import com.nhnacademy.task.entity.ProjectRole;
@@ -36,7 +36,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     private final ProjectRepository projectRepository;
 
     @Override
-    public List<ProjectMemberRespondDto> getProjects(Long memberNum, int page) {
+    public List<ProjectMemberResponseDto> getProjects(Long memberNum, int page) {
         Pageable pageable = PageRequest.of(page, NUM_PER_PAGE);
 
         return projectMemberRepository.findByProjectMemberPkProjectMemberNum(memberNum, pageable)
@@ -44,16 +44,14 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     }
 
     @Override
-    public Optional<ProjectMemberRespondDto> getProjectAdministratorByProjectNum(Long projectNum) {
+    public Optional<ProjectMemberResponseDto> getProjectAdministratorByProjectNum(Long projectNum) {
         Optional<Project> project = projectRepository.findById(projectNum);
-//        if (project.isEmpty()) {
-//            return ProjectMemberRespondDto.builder().build();
-//        }
-        ProjectMemberRespondDto projectMemberRespondDto =
+
+        ProjectMemberResponseDto projectMemberResponseDto =
                 projectMemberRepository.findByProjectMemberPkProjectNumAndProjectRole(projectNum,
                         ProjectRole.PROJECT_ROLE_ADMIN.toString());
 
-        return Optional.ofNullable(projectMemberRespondDto);
+        return Optional.ofNullable(projectMemberResponseDto);
     }
 
     @Override

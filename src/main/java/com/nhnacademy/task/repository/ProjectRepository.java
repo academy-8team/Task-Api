@@ -12,13 +12,14 @@
 
 package com.nhnacademy.task.repository;
 
+import com.nhnacademy.task.dto.response.ProjectResponseDto;
 import com.nhnacademy.task.entity.Project;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    Page<com.nhnacademy.task.dto.respond.ProjectResponseDto> findAllBy(Pageable pageable);
+    Page<ProjectResponseDto> findAllBy(Pageable pageable);
 
-    com.nhnacademy.task.dto.respond.ProjectResponseDto findByProjectNum(Long projectNum);
+    ProjectResponseDto findByProjectNum(Long projectNum);
 }
