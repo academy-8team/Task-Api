@@ -15,7 +15,6 @@ package com.nhnacademy.task.controller;
 import com.nhnacademy.task.dto.response.ProjectMemberResponseDto;
 import com.nhnacademy.task.service.ProjectMemberService;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
