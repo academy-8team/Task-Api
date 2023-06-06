@@ -13,7 +13,7 @@
 package com.nhnacademy.task.service.impl;
 
 import com.nhnacademy.task.dto.request.TaskRequestDto;
-import com.nhnacademy.task.dto.respond.TaskRespondDto;
+import com.nhnacademy.task.dto.response.TaskResponseDto;
 import com.nhnacademy.task.entity.Milestone;
 import com.nhnacademy.task.entity.Project;
 import com.nhnacademy.task.entity.Tag;
@@ -60,20 +60,20 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Optional<TaskRespondDto> findTaskDetail(Long projectNum, Long taskNum) {
+    public Optional<TaskResponseDto> findTaskDetail(Long projectNum, Long taskNum) {
         Project project = projectRepository.findById(projectNum)
                 .orElseThrow(() -> new RuntimeException("해당 프로젝트가 존재하지 않습니다."));
 //        if (project.isEmpty()) {
-//            return TaskRespondDto.builder().build();
+//            return TaskResponseDto.builder().build();
 //        }
-        TaskRespondDto taskRespondDto =
+        TaskResponseDto taskResponseDto =
                 taskRepository.findByProjectAndTaskNum(project, taskNum);
 
-        return Optional.ofNullable(taskRespondDto);
+        return Optional.ofNullable(taskResponseDto);
     }
 
     @Override
-    public List<TaskRespondDto> findTaskAll(Long projectNum) {
+    public List<TaskResponseDto> findTaskAll(Long projectNum) {
         Project project = projectRepository.findById(projectNum)
                 .orElseThrow(() -> new RuntimeException("해당 프로젝트가 존재하지 않습니다."));
         return taskRepository.findByProject(project);

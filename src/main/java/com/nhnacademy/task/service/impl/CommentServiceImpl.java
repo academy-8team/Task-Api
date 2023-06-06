@@ -12,74 +12,71 @@
 
 package com.nhnacademy.task.service.impl;
 
-import com.nhnacademy.task.dto.respond.ProjectMemberRespondDto;
-import com.nhnacademy.task.entity.Project;
-import com.nhnacademy.task.entity.ProjectMember;
-import com.nhnacademy.task.entity.ProjectRole;
-import com.nhnacademy.task.entity.pk.ProjectMemberPk;
-import com.nhnacademy.task.repository.ProjectMemberRepository;
-import com.nhnacademy.task.repository.ProjectRepository;
-import com.nhnacademy.task.service.ProjectMemberService;
+import com.nhnacademy.task.dto.response.CommentResponseDto;
+import com.nhnacademy.task.entity.Comment;
+import com.nhnacademy.task.entity.Task;
+import com.nhnacademy.task.repository.CommentRepository;
+import com.nhnacademy.task.repository.TaskRepository;
+import com.nhnacademy.task.service.CommentService;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RequiredArgsConstructor
 @Service
-public class ProjectMemberServiceImpl implements ProjectMemberService {
-    private static final int NUM_PER_PAGE = 5;
-
-    private final ProjectMemberRepository projectMemberRepository;
-    private final ProjectRepository projectRepository;
+public class CommentServiceImpl implements CommentService {
+    private final CommentRepository commentRepository;
+    private final TaskRepository taskRepository;
 
     @Override
-    public List<ProjectMemberRespondDto> getProjects(Long memberNum, int page) {
-        Pageable pageable = PageRequest.of(page, NUM_PER_PAGE);
+    public String registerComment(@RequestBody String commentContent, Long projectNum, Long taskNum,
+                                  String writerId) {
+        Optional<Task> task = taskRepository.findById(taskNum);
 
-        return projectMemberRepository.findByProjectMemberPkProjectMemberNum(memberNum, pageable)
-                .getContent();
+        if (task.isEmpty()) {
+            return "해당 task가 존재하지 않습니다.";
+        }
+        Comment comment = Comment.builder()
+                .commentContent(commentContent)
+                .task(task.get())
+                .writerId(writerId)
+                .build();
+
+        commentRepository.save(comment);
+
+        return "댓글이 저장 되었습니다.";
     }
 
     @Override
-    public Optional<ProjectMemberRespondDto> getProjectAdministratorByProjectNum(Long projectNum) {
-        Optional<Project> project = projectRepository.findById(projectNum);
-//        if (project.isEmpty()) {
-//            return ProjectMemberRespondDto.builder().build();
-//        }
-        ProjectMemberRespondDto projectMemberRespondDto =
-                projectMemberRepository.findByProjectMemberPkProjectNumAndProjectRole(projectNum,
-                        ProjectRole.PROJECT_ROLE_ADMIN.toString());
+    public List<CommentResponseDto> getAllComment(Long projectNum, Long taskNum) {
+        Task task = taskRepository.findById(taskNum)
+                .orElseThrow(() -> new RuntimeException("해당 task가 존재하지 않습니다."));
 
-        return Optional.ofNullable(projectMemberRespondDto);
+        return commentRepository.findByTask(task);
     }
 
     @Override
-    public String registerProjectMember(Long projectNum, Long memberNum) {
-        ProjectMemberPk projectMemberPk = ProjectMemberPk.builder()
-                .projectNum(projectNum)
-                .projectMemberNum(memberNum)
-                .build();
-
-        if (projectMemberRepository.existsById(projectMemberPk)) {
-            return "이미 존재하는 멤버입니다";
-        }
-        Optional<Project> project = projectRepository.findById(projectNum);
-
-        if (project.isEmpty()) {
-            return "존재하지 않는 프로젝트 입니다.";
+    public String updateComment(String commentContent, Long projectNum, Long taskNum,
+                                Long commentNum) {
+        Optional<Comment> comment = commentRepository.findById(commentNum);
+        if (comment.isEmpty()) {
+            return "해당 comment가 존재하지 않습니다.";
         }
 
-        ProjectMember projectMember = ProjectMember.builder()
-                .projectMemberPk(projectMemberPk)
-                .project(project.get())
-                .projectRole(ProjectRole.PROJECT_ROLE_USER)
-                .build();
+        Comment updateComment = comment.get();
+        updateComment.setCommentContent(commentContent);
 
-        projectMemberRepository.save(projectMember);
+        commentRepository.save(updateComment);
 
-        return "해당 멤버가 저장되었습니다.";
+        return "comment가 수정되었습니다.";
+    }
+
+    @Override
+    public String deleteComment(Long projectNum, Long taskNum, Long commentNum) {
+        commentRepository.deleteById(commentNum);
+
+        return "comment가 삭제되었습니다.";
     }
 }

@@ -10,9 +10,12 @@
  * 2023/06/02                ichunghui             최초 생성
  */
 
-import com.nhnacademy.task.dto.respond.CommentRespondDto;
+
 
 import java.util.List;
+
+import com.nhnacademy.task.dto.response.CommentResponseDto;
+import com.nhnacademy.task.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +36,7 @@ public class CommentController {
     }
 
     @GetMapping("/project/{projectNum}/task/{taskNum}/comment/all")
-    public List<CommentRespondDto> getAllComment(
+    public List<CommentResponseDto> getAllComment(
             @PathVariable(value = "projectNum") Long projectNum,
             @PathVariable(value = "taskNum") Long taskNum) {
         return commentService.getAllComment(projectNum, taskNum);

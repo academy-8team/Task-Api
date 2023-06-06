@@ -12,14 +12,15 @@
 
 package com.nhnacademy.task.service;
 
-import com.nhnacademy.task.dto.respond.ProjectMemberRespondDto;
+import com.nhnacademy.task.dto.response.ProjectMemberResponseDto;
+
 import java.util.List;
 import java.util.Optional;
 
 public interface ProjectMemberService {
-    List<ProjectMemberRespondDto> getProjects(Long memberNum, int page);
+    List<ProjectMemberResponseDto> getProjects(Long memberNum, int page);
 
-    Optional<ProjectMemberRespondDto> getProjectAdministratorByProjectNum(Long projectNum);
+    Optional<ProjectMemberResponseDto> getProjectAdministratorByProjectNum(Long projectNum);
 
     String registerProjectMember(Long projectNum, Long memberNum);
 }

@@ -1,4 +1,4 @@
-/**
+package com.nhnacademy.task.entity; /**
  * packageName :  com.nhnacademy.task.entity
  * fileName : ProjectMember
  * author :  ichunghui

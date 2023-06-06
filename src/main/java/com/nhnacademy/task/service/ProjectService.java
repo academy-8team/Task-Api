@@ -13,15 +13,16 @@
 package com.nhnacademy.task.service;
 
 import com.nhnacademy.task.dto.request.ProjectRequestDto;
+import com.nhnacademy.task.dto.response.ProjectResponseDto;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ProjectService {
-    List<com.nhnacademy.task.dto.respond.ProjectResponseDto> getProjects(int page);
+    List<com.nhnacademy.task.dto.response.ProjectResponseDto> getProjects(int page);
 
-    Optional<com.nhnacademy.task.dto.respond.ProjectResponseDto> makeProject(
+    Optional<ProjectResponseDto> makeProject(
             ProjectRequestDto projectRequestDto, Long memberNum);
 
-    Optional<com.nhnacademy.task.dto.respond.ProjectResponseDto> getProjectByProjectNum(Long projectNum);
+    Optional<ProjectResponseDto> getProjectByProjectNum(Long projectNum);
 }

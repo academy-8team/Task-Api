@@ -12,7 +12,6 @@
 
 package com.nhnacademy.task.service;
 
-import com.nhnacademy.task.dto.respond.TaskTagRespondDto;
 import java.util.List;
 
 public interface TaskTagService {

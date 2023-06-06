@@ -12,11 +12,12 @@
 
 package com.nhnacademy.task.repository;
 
+import com.nhnacademy.task.dto.response.MilestoneResponseDto;
 import com.nhnacademy.task.entity.Milestone;
 import com.nhnacademy.task.entity.Project;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MilestoneRepository extends JpaRepository<Milestone, Long> {
-    List<com.nhnacademy.task.dto.respond.MilestoneResponseDto> findByProject(Project project);
+    List<MilestoneResponseDto> findByProject(Project project);
 }

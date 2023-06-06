@@ -12,18 +12,20 @@
 
 package com.nhnacademy.task.service;
 
+import com.nhnacademy.task.dto.response.MilestoneResponseDto;
+
 import java.util.List;
 
 public interface MilestoneService {
     String createMilestone(Long projectNum, String milestoneTitle);
 
-    List<com.nhnacademy.task.dto.respond.MilestoneResponseDto> findAllMilestone(Long projectNum);
+    List<MilestoneResponseDto> findAllMilestone(Long projectNum);
 
     String updateTag(Long projectNum, Long milestoneNum, String milestoneTitle);
 
     String deleteTag(Long projectNum, Long milestoneNum);
 
-    List<com.nhnacademy.task.dto.respond.MilestoneResponseDto> getMilestoneByProjectNum(Long projectNum, Long taskNum);
+    List<MilestoneResponseDto> getMilestoneByProjectNum(Long projectNum, Long taskNum);
 
     String getMilestoneByTaskNum(Long projectNum, Long taskNum);
 }
