@@ -19,6 +19,7 @@ import com.nhnacademy.task.entity.ProjectRole;
 import com.nhnacademy.task.entity.pk.ProjectMemberPk;
 import com.nhnacademy.task.repository.ProjectMemberRepository;
 import com.nhnacademy.task.repository.ProjectRepository;
+import com.nhnacademy.task.service.AlreadyExistMemberId;
 import com.nhnacademy.task.service.ProjectMemberService;
 
 import java.util.List;
@@ -49,7 +50,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<ProjectMemberResponseDto> getProjectAdministratorByProjectNum(Long projectNum) {
+    public ProjectMemberResponseDto getProjectAdministratorByProjectNum(Long projectNum) {
         return Optional.ofNullable(projectMemberRepository.findByProjectMemberPkProjectNumAndProjectRole(projectNum,
                 ProjectRole.PROJECT_ROLE_ADMIN.toString()));
     }
@@ -62,7 +63,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
                 .build();
 
         if (projectMemberRepository.existsById(projectMemberPk)) {
-            return "이미 존재하는 멤버입니다";
+            throw new AlreadyExistMemberId()
         }
 
         Project project = projectRepository.findById(projectNum)

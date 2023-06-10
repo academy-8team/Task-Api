@@ -6,24 +6,29 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Milestone extends BaseTimeEntity{
+@Table(name = "milestones")
+public class Milestone extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long milestoneNum;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_num")
     private Project project;
 
     private String milestoneTitle;
 
-    @OneToOne(mappedBy = "milestone")
+    @OneToOne(mappedBy = "milestone", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private Task task;
+
+    @Builder
+    public Milestone(Project project, String milestoneTitle) {
+        this.project = project;
+        this.milestoneTitle = milestoneTitle;
+    }
 }

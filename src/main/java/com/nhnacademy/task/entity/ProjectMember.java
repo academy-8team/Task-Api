@@ -13,24 +13,17 @@
 package com.nhnacademy.task.entity;
 
 import com.nhnacademy.task.entity.pk.ProjectMemberPk;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+import javax.persistence.*;
+
+import lombok.*;
+
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class ProjectMember extends BaseTimeEntity{
+@Table(name = "project_members")
+public class ProjectMember extends BaseTimeEntity {
+
     @EmbeddedId
     private ProjectMemberPk projectMemberPk;
 
@@ -38,7 +31,14 @@ public class ProjectMember extends BaseTimeEntity{
     private ProjectRole projectRole;
 
     @MapsId("projectNum")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_num")
     private Project project;
+
+    @Builder
+    public ProjectMember(ProjectMemberPk projectMemberPk, ProjectRole projectRole, Project project) {
+        this.projectMemberPk = projectMemberPk;
+        this.projectRole = projectRole;
+        this.project = project;
+    }
 }

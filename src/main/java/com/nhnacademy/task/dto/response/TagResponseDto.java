@@ -13,13 +13,11 @@
 package com.nhnacademy.task.dto.response;
 
 import com.nhnacademy.task.entity.Project;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Builder
-@Data
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
 public class TagResponseDto {
     private Long tagNum;
 

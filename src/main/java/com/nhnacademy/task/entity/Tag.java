@@ -12,32 +12,29 @@
 
 package com.nhnacademy.task.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import javax.persistence.*;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+import lombok.*;
+
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Tag extends BaseTimeEntity{
+@Table(name = "tags")
+public class Tag extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tagNum;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_num")
     private Project project;
 
     private String tagTitle;
+
+    @Builder
+    public Tag(Project project, String tagTitle) {
+        this.project = project;
+        this.tagTitle = tagTitle;
+    }
 }

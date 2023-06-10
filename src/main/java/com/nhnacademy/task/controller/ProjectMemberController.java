@@ -17,10 +17,7 @@ import com.nhnacademy.task.service.ProjectMemberService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,7 +25,9 @@ public class ProjectMemberController {
     private final ProjectMemberService projectMemberService;
 
     @GetMapping("/project/member/{memberNum}")
-    public ResponseEntity<List<ProjectMemberResponseDto>> getProjectList(@PathVariable(name = "memberNum") Long memberNum, @RequestParam(name = "page") int page) {
+    public ResponseEntity<List<ProjectMemberResponseDto>> getProjectList(@PathVariable(name = "memberNum") Long memberNum,
+                                                                         @RequestParam(name = "page") int page,
+                                                                         @RequestParam(name = "size") int size) {
         List<ProjectMemberResponseDto> projectMembers = projectMemberService.getProjects(memberNum, page);
         return ResponseEntity.ok().body(projectMembers);
     }
@@ -40,7 +39,7 @@ public class ProjectMemberController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/project/{projectNum}/member/register")
+    @PostMapping("/project/{projectNum}/member/register")
     public ResponseEntity<String> registerProjectMember(@PathVariable(name = "projectNum") Long projectNum, @RequestParam(name = "memberNum") Long memberNum) {
         String result = projectMemberService.registerProjectMember(projectNum, memberNum);
         if (result.equals("Project member registration successful")) {

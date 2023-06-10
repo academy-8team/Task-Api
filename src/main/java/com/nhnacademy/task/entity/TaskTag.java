@@ -13,32 +13,36 @@
 package com.nhnacademy.task.entity;
 
 import com.nhnacademy.task.entity.pk.TaskTagPk;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+import javax.persistence.*;
+
+import lombok.*;
+
+import java.util.List;
+
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class TaskTag extends BaseTimeEntity{
+@Table(name = "task_tags")
+public class TaskTag extends BaseTimeEntity {
+
     @EmbeddedId
     private TaskTagPk taskTagPk;
 
     @MapsId("tagNum")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tag_num")
     private Tag tag;
 
     @MapsId("taskNum")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_num")
     private Task task;
+
+    @Builder
+    public TaskTag(TaskTagPk taskTagPk, Tag tag, Task task) {
+        this.taskTagPk = taskTagPk;
+        this.tag = tag;
+        this.task = task;
+    }
 }

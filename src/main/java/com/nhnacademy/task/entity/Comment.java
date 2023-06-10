@@ -4,13 +4,11 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
-@Setter
 @Entity
-public class Comment extends BaseTimeEntity{
+@Table(name = "comments")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Comment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentNum;
@@ -22,4 +20,11 @@ public class Comment extends BaseTimeEntity{
     private String commentContent;
 
     private String writerId;
+
+    @Builder
+    public Comment(Task task, String commentContent, String writerId) {
+        this.task = task;
+        this.commentContent = commentContent;
+        this.writerId = writerId;
+    }
 }

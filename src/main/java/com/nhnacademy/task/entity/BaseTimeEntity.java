@@ -34,4 +34,3 @@ public abstract class BaseTimeEntity {
     @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
 }
-

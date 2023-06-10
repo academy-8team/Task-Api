@@ -28,10 +28,9 @@ import java.util.Optional;
 public class TaskController {
     private final TaskService taskService;
 
-    @PostMapping("/project/{projectNum}/task/create/{memberNum}")
+    @PostMapping("/project/{projectNum}/task")
     public ResponseEntity<String> createTask(@RequestBody TaskRequestDto taskRequestDto,
-                                             @PathVariable(value = "projectNum") Long projectNum,
-                                             @PathVariable(value = "memberNum") Long memberNum) {
+                                             @PathVariable(value = "projectNum") Long projectNum) {
 
         String result = taskService.createTask(taskRequestDto, projectNum);
         return ResponseEntity.ok().body(result);
@@ -51,7 +50,7 @@ public class TaskController {
         return ResponseEntity.ok().body(tasks);
     }
 
-    @PutMapping("/project/{projectNum}/task/{taskNum}/update")
+    @PutMapping("/project/{projectNum}/task/{taskNum}")
     public ResponseEntity<String> updateTask(@RequestBody TaskRequestDto taskRequestDto,
                                              @PathVariable(value = "projectNum") Long projectNum,
                                              @PathVariable(value = "taskNum") Long taskNum) {
@@ -66,7 +65,7 @@ public class TaskController {
         return ResponseEntity.ok().body(result);
     }
 
-    @PutMapping("/project/{projectNum}/task/{taskNum}/milestone/{milestoneNum}/register")
+    @PutMapping("/project/{projectNum}/task/{taskNum}/milestone/{milestoneNum}")
     public ResponseEntity<String> registerMilestone(@PathVariable(value = "projectNum") Long projectNum,
                                                     @PathVariable(value = "taskNum") Long taskNum,
                                                     @PathVariable(value = "milestoneNum") Long milestoneNum) {

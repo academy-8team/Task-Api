@@ -13,46 +13,47 @@
 package com.nhnacademy.task.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.*;
+
+import lombok.*;
+
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Task extends BaseTimeEntity{
+@Table(name = "tasks")
+public class Task extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long taskNum;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_num")
     private Project project;
-
-    @OneToOne
-    @JoinColumn(name = "milestone_num")
-    private Milestone milestone;
 
     private String taskTitle;
 
     private String taskContent;
 
-    @OneToMany(mappedBy = "task", cascade = CascadeType.REMOVE)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "milestone_num")
+    private Milestone milestone;
+
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<TaskTag> taskTags = new ArrayList<>();
+
+    @Builder
+    public Task(Project project, String taskTitle, String taskContent) {
+        this.project = project;
+        this.taskTitle = taskTitle;
+        this.taskContent = taskContent;
+    }
 }

@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 public class TagController {
     private final TagService tagService;
 
-    @PostMapping("/project/{projectNum}/create")
+    @PostMapping("/project/{projectNum}/tasks/{taskNum}/tags")
     public ResponseEntity<String> createTag(@PathVariable(value = "projectNum") Long projectNum,
                                             @RequestParam(value = "tagTitle") String tagTitle) {
         String result = tagService.createTag(projectNum, tagTitle);
