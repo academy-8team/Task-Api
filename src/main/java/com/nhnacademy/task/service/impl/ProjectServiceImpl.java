@@ -2,84 +2,72 @@
  * packageName :  com.nhnacademy.task.service.impl
  * fileName : ProjectServiceImpl
  * author :  ichunghui
- * date : 2023/06/06 
+ * date : 2023/06/11 
  * description :
  * ===========================================================
  * DATE                 AUTHOR                NOTE
  * -----------------------------------------------------------
- * 2023/06/06                ichunghui             최초 생성
+ * 2023/06/11                ichunghui             최초 생성
  */
 
 package com.nhnacademy.task.service.impl;
 
-import com.nhnacademy.task.dto.request.ProjectRequestDto;
-import com.nhnacademy.task.dto.response.ProjectResponseDto;
+import com.nhnacademy.task.dto.ProjectDto;
 import com.nhnacademy.task.entity.Project;
-import com.nhnacademy.task.entity.ProjectMember;
-import com.nhnacademy.task.entity.ProjectRole;
-import com.nhnacademy.task.entity.ProjectStatus;
-import com.nhnacademy.task.entity.pk.ProjectMemberPk;
-import com.nhnacademy.task.repository.ProjectMemberRepository;
+import com.nhnacademy.task.exception.ProjectNotFoundException;
 import com.nhnacademy.task.repository.ProjectRepository;
 import com.nhnacademy.task.service.ProjectService;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@RequiredArgsConstructor
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
+@RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
-    private static final int NUM_PER_PAGE = 5;
 
     private final ProjectRepository projectRepository;
-    private final ProjectMemberRepository projectMemberRepository;
 
     @Override
-    @Transactional(readOnly = true)
-    public List<ProjectResponseDto> getProjects(int page) {
-        Pageable pageable = PageRequest.of(page, NUM_PER_PAGE);
-
-        return projectRepository.findAllBy(pageable).getContent();
+    public ProjectDto createProject(ProjectDto projectDto) {
+        Project project = projectDto.toEntity();
+        project = projectRepository.save(project);
+        projectDto.setProjectId(project.getProjectId());
+        return projectDto;
     }
 
     @Override
-    @Transactional
-    public Optional<ProjectResponseDto> makeProject(ProjectRequestDto projectRequestDto, Long memberNum) {
-        Project project = Project.builder()
-                .projectName(projectRequestDto.getProjectName())
-                .projectDescription(projectRequestDto.getProjectDescription())
-                .projectStatus(ProjectStatus.ACTIVE)
-                .build();
-
-        Long projectNum = projectRepository.save(project).getProjectNum();
-
-        ProjectMemberPk projectMemberPk = ProjectMemberPk.builder()
-                .projectMemberNum(memberNum)
-                .projectNum(project.getProjectNum())
-                .build();
-
-        ProjectMember projectMember = ProjectMember.builder()
-                .projectMemberPk(projectMemberPk)
-                .projectRole(ProjectRole.PROJECT_ROLE_ADMIN)
-                .project(project)
-                .build();
-
-        projectMemberRepository.save(projectMember);
-
-        ProjectResponseDto projectResponseDto = projectRepository.findByProjectNum(projectNum);
-
-        return Optional.ofNullable(projectResponseDto);
+    public List<ProjectDto> getAccessibleProjects() {
+        return projectRepository.findAll().stream()
+                .map(ProjectDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<ProjectResponseDto> getProjectByProjectNum(Long projectNum) {
-        ProjectResponseDto projectResponseDto = projectRepository.findByProjectNum(projectNum);
+    public ProjectDto getProjectById(Long projectId) {
+        return projectRepository.findById(projectId)
+                .map(ProjectDto::fromEntity)
+                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + projectId + " not found"));
+    }
 
-        return Optional.ofNullable(projectResponseDto);
+    @Override
+    public void deleteProjectById(Long projectId) {
+        if (!projectRepository.existsById(projectId)) {
+            throw new ProjectNotFoundException("Project with id " + projectId + " not found");
+        }
+        projectRepository.deleteById(projectId);
+    }
+
+    @Override
+    public ProjectDto updateProject(Long projectId, ProjectDto projectDto) {
+        Project existingProject = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + projectId + " not found"));
+
+        existingProject.updateAttributes(projectDto.getProjectName(), projectDto.getProjectDescription(), projectDto.getProjectStatus());
+
+        existingProject = projectRepository.save(existingProject);
+
+        return ProjectDto.fromEntity(existingProject);
     }
 }

@@ -18,8 +18,6 @@ import javax.persistence.*;
 
 import lombok.*;
 
-import java.util.List;
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity

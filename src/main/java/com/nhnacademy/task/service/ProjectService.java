@@ -1,28 +1,17 @@
-/**
- * packageName :  com.nhnacademy.task.service
- * fileName : ProjectService
- * author :  ichunghui
- * date : 2023/06/06 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/06                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.service;
 
-import com.nhnacademy.task.dto.request.ProjectRequestDto;
-import com.nhnacademy.task.dto.response.ProjectResponseDto;
+import com.nhnacademy.task.dto.ProjectDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProjectService {
-    List<ProjectResponseDto> getProjects(int page);
+    ProjectDto createProject(ProjectDto projectDto);
 
-    Optional<ProjectResponseDto> makeProject(
-            ProjectRequestDto projectRequestDto, Long memberNum);
+    List<ProjectDto> getAccessibleProjects();
 
-    Optional<ProjectResponseDto> getProjectByProjectNum(Long projectNum);
+    ProjectDto getProjectById(Long projectId);
+
+    void deleteProjectById(Long projectId);
+
+    ProjectDto updateProject(Long projectId, ProjectDto projectDto);
 }

@@ -16,13 +16,16 @@ import java.util.List;
 public class Project extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long projectNum;
+    @Column(name = "project_id")
+    private Long projectId;
 
     @NotNull
     @Size(min=2, max=30)
+    @Column(name = "project_name")
     private String projectName;
 
     @Size(max=200)
+    @Column(name = "project_description")
     private String projectDescription;
 
     @Enumerated(EnumType.STRING)
@@ -50,4 +53,17 @@ public class Project extends BaseTimeEntity{
         this.projectDescription = projectDescription;
         this.projectStatus = projectStatus;
     }
+
+    public void updateAttributes(String projectName, String projectDescription, ProjectStatus projectStatus) {
+        Project updatedProject = Project.builder()
+                .projectName(projectName)
+                .projectDescription(projectDescription)
+                .projectStatus(projectStatus)
+                .build();
+
+        this.projectName = updatedProject.projectName;
+        this.projectDescription = updatedProject.projectDescription;
+        this.projectStatus = updatedProject.projectStatus;
+    }
+
 }
