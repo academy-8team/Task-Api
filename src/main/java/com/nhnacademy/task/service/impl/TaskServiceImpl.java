@@ -22,7 +22,6 @@ import com.nhnacademy.task.entity.TaskTag;
 import com.nhnacademy.task.entity.pk.TaskTagPk;
 import com.nhnacademy.task.repository.MilestoneRepository;
 import com.nhnacademy.task.repository.ProjectRepository;
-import com.nhnacademy.task.repository.TagRepository;
 import com.nhnacademy.task.repository.TaskRepository;
 import com.nhnacademy.task.repository.TaskTagRepository;
 import com.nhnacademy.task.service.TaskService;

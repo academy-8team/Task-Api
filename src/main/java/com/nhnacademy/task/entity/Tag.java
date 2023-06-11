@@ -24,10 +24,11 @@ public class Tag extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tagNum;
+    @Column(name = "tag_id")
+    private Long tagId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_num")
+    @JoinColumn(name = "project_id")
     private Project project;
 
     private String tagTitle;
@@ -35,6 +36,10 @@ public class Tag extends BaseTimeEntity {
     @Builder
     public Tag(Project project, String tagTitle) {
         this.project = project;
+        this.tagTitle = tagTitle;
+    }
+
+    public void update(String tagTitle) {
         this.tagTitle = tagTitle;
     }
 }

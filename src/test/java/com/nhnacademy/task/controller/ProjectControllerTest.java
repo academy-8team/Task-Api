@@ -52,7 +52,7 @@ class ProjectControllerTest {
     void testGetAllProjects() throws Exception {
         List<ProjectDto> projects = Arrays.asList(
                 new ProjectDto(1L, "Project 1", "Description 1", ProjectStatus.ACTIVE),
-                new ProjectDto(2L, "Project 2", "Description 2", ProjectStatus.INACTIVE)
+                new ProjectDto(2L, "Project 2", "Description 2", ProjectStatus.ACTIVE)
         );
         when(projectService.getAccessibleProjects()).thenReturn(projects);
 

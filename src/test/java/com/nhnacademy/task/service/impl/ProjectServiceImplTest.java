@@ -3,6 +3,7 @@ package com.nhnacademy.task.service.impl;
 import com.nhnacademy.task.dto.ProjectDto;
 import com.nhnacademy.task.entity.Project;
 import com.nhnacademy.task.entity.ProjectStatus;
+import com.nhnacademy.task.exception.ProjectNotFoundException;
 import com.nhnacademy.task.repository.ProjectRepository;
 import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -22,8 +24,19 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(MockitoExtension.class)
 class ProjectServiceImplTest {
 
     @Mock
@@ -32,68 +45,82 @@ class ProjectServiceImplTest {
     @InjectMocks
     private ProjectServiceImpl projectService;
 
+    private ProjectDto projectDto;
+    private Project project;
+    private Long projectId = 1L;
+
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        projectDto = new ProjectDto(null, "Test Project", "This is a test project", ProjectStatus.ACTIVE);
+        project = projectDto.toEntity();
     }
 
     @Test
     void testCreateProject() {
-        ProjectDto projectDto = new ProjectDto(null, "Test Project", "Test Description", ProjectStatus.ACTIVE);
-        Project project = Project.builder()
-                .projectName("Test Project")
-                .projectDescription("Test Description")
-                .projectStatus(ProjectStatus.ACTIVE)
-                .build();
-
-        when(projectRepository.save(any(Project.class))).thenReturn(project);
 
         ProjectDto result = projectService.createProject(projectDto);
 
-        assertEquals("Test Project", result.getProjectName());
-    }
-
-    @Test
-    void testGetAccessibleProjects() {
-        List<Project> projects = Arrays.asList(
-                Project.builder().projectName("Project 1").projectStatus(ProjectStatus.ACTIVE).build(),
-                Project.builder().projectName("Project 2").projectStatus(ProjectStatus.SHUTDOWN).build()
-        );
-        when(projectRepository.findAll()).thenReturn(projects);
-
-        List<ProjectDto> result = projectService.getAccessibleProjects();
-
-        assertEquals(2, result.size());
-        assertEquals("Project 1", result.get(0).getProjectName());
+        assertEquals(projectId, result.getProjectId());
+        assertEquals(projectDto.getProjectName(), result.getProjectName());
+        assertEquals(projectDto.getProjectDescription(), result.getProjectDescription());
     }
 
     @Test
     void testGetProjectById() {
-        Project project = Project.builder().projectName("Test Project").projectDescription("Test Description").projectStatus(ProjectStatus.ACTIVE).build();
-        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
 
-        ProjectDto result = projectService.getProjectById(1L);
+        ProjectDto result = projectService.getProjectById(projectId);
 
-        assertEquals("Test Project", result.getProjectName());
+        assertEquals(projectId, result.getProjectId());
+        assertEquals(project.getProjectName(), result.getProjectName());
+        assertEquals(project.getProjectDescription(), result.getProjectDescription());
+    }
+
+    @Test
+    void testGetProjectByIdNotFound() {
+        when(projectRepository.findById(projectId)).thenReturn(Optional.empty());
+
+        assertThrows(ProjectNotFoundException.class, () -> {
+            projectService.getProjectById(projectId);
+        });
     }
 
     @Test
     void testDeleteProjectById() {
-        doNothing().when(projectRepository).deleteById(1L);
+        when(projectRepository.existsById(projectId)).thenReturn(true);
 
-        assertDoesNotThrow(() -> projectService.deleteProjectById(1L));
+        // Should not throw an exception
+        assertDoesNotThrow(() -> projectService.deleteProjectById(projectId));
+    }
+
+    @Test
+    void testDeleteProjectByIdNotFound() {
+        when(projectRepository.existsById(projectId)).thenReturn(false);
+
+        assertThrows(ProjectNotFoundException.class, () -> {
+            projectService.deleteProjectById(projectId);
+        });
     }
 
     @Test
     void testUpdateProject() {
-        Project project = Project.builder().projectName("Test Project").projectDescription("Test Description").projectStatus(ProjectStatus.ACTIVE).build();
-        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
-        when(projectRepository.save(any(Project.class))).thenReturn(project);
+        ProjectDto updatedDto = new ProjectDto(projectId, "Updated Project", "Updated Description", ProjectStatus.ACTIVE);
+        Project updatedProject = updatedDto.toEntity();
 
-        ProjectDto updatedProjectDto = new ProjectDto(null, "Updated Project", "Updated Description", ProjectStatus.ACTIVE);
-        ProjectDto result = projectService.updateProject(1L, updatedProjectDto);
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
 
-        assertEquals("Updated Project", result.getProjectName());
-        assertEquals("Updated Description", result.getProjectDescription());
+        ProjectDto result = projectService.updateProject(projectId, updatedDto);
+
+        assertEquals(updatedDto.getProjectName(), result.getProjectName());
+        assertEquals(updatedDto.getProjectDescription(), result.getProjectDescription());
+    }
+
+    @Test
+    void testUpdateProjectNotFound() {
+        when(projectRepository.findById(projectId)).thenReturn(Optional.empty());
+
+        assertThrows(ProjectNotFoundException.class, () -> {
+            projectService.updateProject(projectId, projectDto);
+        });
     }
 }

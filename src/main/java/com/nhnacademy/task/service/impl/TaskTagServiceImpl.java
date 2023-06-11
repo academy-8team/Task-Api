@@ -17,7 +17,6 @@ import com.nhnacademy.task.entity.Tag;
 import com.nhnacademy.task.entity.Task;
 import com.nhnacademy.task.entity.TaskTag;
 import com.nhnacademy.task.entity.pk.TaskTagPk;
-import com.nhnacademy.task.repository.TagRepository;
 import com.nhnacademy.task.repository.TaskRepository;
 import com.nhnacademy.task.repository.TaskTagRepository;
 import com.nhnacademy.task.service.TaskTagService;

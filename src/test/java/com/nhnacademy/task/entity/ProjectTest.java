@@ -30,7 +30,7 @@ class ProjectTest {
                 .projectStatus(ProjectStatus.ACTIVE)
                 .build();
 
-        project.updateAttributes("Updated Project", "Updated Description", ProjectStatus.INACTIVE);
+        project.updateAttributes("Updated Project", "Updated Description", ProjectStatus.ACTIVE);
 
         assertEquals("Updated Project", project.getProjectName());
         assertEquals("Updated Description", project.getProjectDescription());
