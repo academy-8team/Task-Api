@@ -22,12 +22,14 @@ import com.nhnacademy.task.repository.TagRepository;
 import com.nhnacademy.task.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TagServiceImpl implements TagService {
 
     private final TagRepository tagRepository;
@@ -41,6 +43,7 @@ public class TagServiceImpl implements TagService {
         return TagDto.fromEntity(tagRepository.save(tag));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<TagDto> getTagsByProjectId(Long projectId) {
         Project project = projectRepository.findById(projectId)
@@ -50,6 +53,7 @@ public class TagServiceImpl implements TagService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public TagDto getTagById(Long projectId, Long tagId) {
         Tag tag = tagRepository.findByProjectIdAndTagId(projectId, tagId)

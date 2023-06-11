@@ -22,12 +22,14 @@ import com.nhnacademy.task.repository.ProjectRepository;
 import com.nhnacademy.task.service.MilestoneService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MilestoneServiceImpl implements MilestoneService {
 
     private final ProjectRepository projectRepository;
@@ -41,6 +43,7 @@ public class MilestoneServiceImpl implements MilestoneService {
         return MilestoneDto.fromEntity(milestoneRepository.save(milestone));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<MilestoneDto> getMilestonesByProjectId(Long projectId) {
         Project project = projectRepository.findById(projectId)
@@ -50,6 +53,7 @@ public class MilestoneServiceImpl implements MilestoneService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public MilestoneDto getMilestoneById(Long projectId, Long milestoneId) {
         Project project = projectRepository.findById(projectId)

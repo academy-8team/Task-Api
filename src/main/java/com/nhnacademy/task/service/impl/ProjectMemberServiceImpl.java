@@ -22,12 +22,14 @@ import com.nhnacademy.task.repository.ProjectRepository;
 import com.nhnacademy.task.service.ProjectMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ProjectMemberServiceImpl implements ProjectMemberService {
 
     private final ProjectRepository projectRepository;
@@ -40,6 +42,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
         return ProjectMemberDto.fromEntity(projectMemberRepository.save(projectMember));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ProjectMemberDto> getProjectMembers(Long projectId) {
         Project project = getProject(projectId);
@@ -48,6 +51,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public ProjectMemberDto getProjectMemberById(Long projectId, Long projectMemberNum) {
         Project project = getProject(projectId);

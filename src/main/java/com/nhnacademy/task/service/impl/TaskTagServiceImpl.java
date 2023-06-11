@@ -25,12 +25,14 @@ import com.nhnacademy.task.repository.TaskTagRepository;
 import com.nhnacademy.task.service.TaskTagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TaskTagServiceImpl implements TaskTagService {
 
     private final TaskTagRepository taskTagRepository;
@@ -56,6 +58,7 @@ public class TaskTagServiceImpl implements TaskTagService {
         return TaskTagDto.fromEntity(taskTag);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<TaskTagDto> getTagsForTask(Long projectId, Long taskId) {
         return taskTagRepository. findByTaskTagPkTaskIdAndTaskProjectId(taskId, projectId).stream()

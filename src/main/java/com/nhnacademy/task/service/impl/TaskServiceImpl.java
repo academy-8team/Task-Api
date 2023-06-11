@@ -22,12 +22,14 @@ import com.nhnacademy.task.repository.TaskRepository;
 import com.nhnacademy.task.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TaskServiceImpl implements TaskService {
 
     private final ProjectRepository projectRepository;
@@ -41,6 +43,7 @@ public class TaskServiceImpl implements TaskService {
         return TaskDto.fromEntity(taskRepository.save(task));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<TaskDto> getTasksByProjectId(Long projectId) {
         Project project = projectRepository.findById(projectId)
@@ -50,6 +53,7 @@ public class TaskServiceImpl implements TaskService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public TaskDto getTaskById(Long projectId, Long taskId) {
         Project project = projectRepository.findById(projectId)

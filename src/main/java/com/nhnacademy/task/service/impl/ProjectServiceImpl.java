@@ -19,12 +19,14 @@ import com.nhnacademy.task.repository.ProjectRepository;
 import com.nhnacademy.task.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
@@ -37,6 +39,7 @@ public class ProjectServiceImpl implements ProjectService {
         return projectDto;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ProjectDto> getAccessibleProjects() {
         return projectRepository.findAll().stream()
@@ -44,6 +47,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public ProjectDto getProjectById(Long projectId) {
         return projectRepository.findById(projectId)
