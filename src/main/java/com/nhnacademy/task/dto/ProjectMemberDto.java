@@ -41,8 +41,8 @@ public class ProjectMemberDto {
 
     public static ProjectMemberDto fromEntity(ProjectMember projectMember) {
         return new ProjectMemberDto(
-                projectMember.getProjectMemberPk().getProjectMemberNum(),
-                projectMember.getProjectMemberPk().getProjectNum(),
+                projectMember.getProjectMemberPk().getProjectMemberId(),
+                projectMember.getProjectMemberPk().getProjectId(),
                 projectMember.getProjectRole()
         );
     }

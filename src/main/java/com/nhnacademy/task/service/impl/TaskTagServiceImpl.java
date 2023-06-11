@@ -13,16 +13,12 @@
 package com.nhnacademy.task.service.impl;
 
 import com.nhnacademy.task.dto.TaskTagDto;
-import com.nhnacademy.task.entity.Project;
 import com.nhnacademy.task.entity.Tag;
 import com.nhnacademy.task.entity.Task;
 import com.nhnacademy.task.entity.TaskTag;
 import com.nhnacademy.task.entity.pk.TaskTagPk;
-import com.nhnacademy.task.exception.ProjectNotFoundException;
 import com.nhnacademy.task.exception.TagNotFoundException;
 import com.nhnacademy.task.exception.TaskNotFoundException;
-import com.nhnacademy.task.exception.TaskTagNotFoundException;
-import com.nhnacademy.task.repository.ProjectRepository;
 import com.nhnacademy.task.repository.TagRepository;
 import com.nhnacademy.task.repository.TaskRepository;
 import com.nhnacademy.task.repository.TaskTagRepository;

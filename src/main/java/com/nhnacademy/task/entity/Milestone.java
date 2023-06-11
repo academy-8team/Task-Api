@@ -1,7 +1,5 @@
 package com.nhnacademy.task.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.*;
 
 import javax.persistence.*;

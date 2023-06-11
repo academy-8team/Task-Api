@@ -5,36 +5,17 @@ import com.nhnacademy.task.entity.Project;
 import com.nhnacademy.task.entity.ProjectStatus;
 import com.nhnacademy.task.exception.ProjectNotFoundException;
 import com.nhnacademy.task.repository.ProjectRepository;
-import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.any;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Optional;
-
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class ProjectServiceImplTest {

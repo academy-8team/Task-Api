@@ -36,11 +36,4 @@ public class TaskTag extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")
     private Task task;
-
-    @Builder
-    public TaskTag(TaskTagPk taskTagPk, Tag tag, Task task) {
-        this.taskTagPk = taskTagPk;
-        this.tag = tag;
-        this.task = task;
-    }
 }
