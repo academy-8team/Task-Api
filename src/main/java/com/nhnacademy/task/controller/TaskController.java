@@ -15,7 +15,6 @@ package com.nhnacademy.task.controller;
 import com.nhnacademy.task.dto.request.TaskRequestDto;
 
 import com.nhnacademy.task.dto.response.TaskResponseDto;
-import com.nhnacademy.task.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

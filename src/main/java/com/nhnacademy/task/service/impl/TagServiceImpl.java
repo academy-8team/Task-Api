@@ -1,3 +1,15 @@
+/**
+ * packageName :  com.nhnacademy.task.service.impl
+ * fileName : TagServiceImpl
+ * author :  ichunghui
+ * date : 2023/06/11 
+ * description :
+ * ===========================================================
+ * DATE                 AUTHOR                NOTE
+ * -----------------------------------------------------------
+ * 2023/06/11                ichunghui             최초 생성
+ */
+
 package com.nhnacademy.task.service.impl;
 
 import com.nhnacademy.task.dto.TagDto;
@@ -33,10 +45,9 @@ public class TagServiceImpl implements TagService {
     public List<TagDto> getTagsByProjectId(Long projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException("Project with id " + projectId + " not found"));
-        List<TagDto> collect = tagRepository.findByProject(project).stream()
+        return tagRepository.findByProject(project).stream()
                 .map(TagDto::fromEntity)
                 .collect(Collectors.toList());
-        return collect;
     }
 
     @Override
@@ -45,7 +56,6 @@ public class TagServiceImpl implements TagService {
                 .orElseThrow(TagNotFoundException::new);
         return TagDto.fromEntity(tag);
     }
-
     @Override
     public void deleteTagById(Long projectId, Long tagId) {
         Tag tag = tagRepository.findByProjectIdAndTagId(projectId, tagId)

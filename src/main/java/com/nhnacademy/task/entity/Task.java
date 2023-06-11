@@ -28,14 +28,18 @@ public class Task extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long taskNum;
+    @Column(name = "task_id")
+    private Long taskId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_num")
+    @JoinColumn(name = "project_Id")
     private Project project;
 
+    @Column(name = "task_title")
     private String taskTitle;
 
+
+    @Column(name = "task_content")
     private String taskContent;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -53,6 +57,11 @@ public class Task extends BaseTimeEntity {
     @Builder
     public Task(Project project, String taskTitle, String taskContent) {
         this.project = project;
+        this.taskTitle = taskTitle;
+        this.taskContent = taskContent;
+    }
+
+    public void update(String taskTitle, String taskContent) {
         this.taskTitle = taskTitle;
         this.taskContent = taskContent;
     }

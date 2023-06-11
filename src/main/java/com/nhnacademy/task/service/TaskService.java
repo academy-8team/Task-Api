@@ -2,35 +2,29 @@
  * packageName :  com.nhnacademy.task.service
  * fileName : TaskService
  * author :  ichunghui
- * date : 2023/06/06 
+ * date : 2023/06/11 
  * description :
  * ===========================================================
  * DATE                 AUTHOR                NOTE
  * -----------------------------------------------------------
- * 2023/06/06                ichunghui             최초 생성
+ * 2023/06/11                ichunghui             최초 생성
  */
 
 package com.nhnacademy.task.service;
 
-import com.nhnacademy.task.dto.request.TaskRequestDto;
-import com.nhnacademy.task.dto.response.TaskResponseDto;
+import com.nhnacademy.task.dto.TaskDto;
+
 import java.util.List;
-import java.util.Optional;
 
 public interface TaskService {
-    String createTask(TaskRequestDto taskRequestDto,
-                      Long projectNum);
 
-    Optional<TaskResponseDto> findTaskDetail(Long projectNum, Long taskNum);
+    TaskDto createTask(Long projectId, TaskDto taskDto);
 
-    List<TaskResponseDto> findTaskAll(Long projectNum);
+    List<TaskDto> getTasksByProjectId(Long projectId);
 
-    String updateTask(TaskRequestDto taskRequestDto, Long projectNum, Long taskNum);
+    TaskDto getTaskById(Long projectId, Long taskId);
 
-    String deleteTask(Long projectNum, Long taskNum);
+    TaskDto updateTask(Long projectId, Long taskId, TaskDto taskDto);
 
-    String registerMilestone(Long projectNum, Long taskNum, Long milestoneNum);
-
-    String registerTag(Long projectNum, Long taskNum, Long tagNum);
+    void deleteTaskById(Long projectId, Long taskId);
 }
-

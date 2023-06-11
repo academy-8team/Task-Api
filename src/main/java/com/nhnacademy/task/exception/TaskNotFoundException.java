@@ -1,6 +1,6 @@
 /**
  * packageName :  com.nhnacademy.task.exception
- * fileName : TagNotFoundException
+ * fileName : TaskNotFoundException
  * author :  ichunghui
  * date : 2023/06/11 
  * description :
@@ -12,12 +12,10 @@
 
 package com.nhnacademy.task.exception;
 
-public class TagNotFoundException extends RuntimeException {
-    public static final String MESSAGE = "태그를 찾을 수 없습니다.";
-    public TagNotFoundException() {
+public class TaskNotFoundException extends RuntimeException {
+    public static final String MESSAGE = "업무가 존재하지 않습니다.";
+    public TaskNotFoundException() {
         super(MESSAGE);
     }
 }
-
-
 

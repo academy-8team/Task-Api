@@ -17,7 +17,6 @@ import com.nhnacademy.task.entity.Milestone;
 import com.nhnacademy.task.entity.Project;
 import com.nhnacademy.task.repository.MilestoneRepository;
 import com.nhnacademy.task.repository.ProjectRepository;
-import com.nhnacademy.task.repository.TaskRepository;
 import com.nhnacademy.task.service.MilestoneService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

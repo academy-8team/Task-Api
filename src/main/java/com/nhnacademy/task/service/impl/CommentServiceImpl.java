@@ -16,7 +16,6 @@ import com.nhnacademy.task.dto.response.CommentResponseDto;
 import com.nhnacademy.task.entity.Comment;
 import com.nhnacademy.task.entity.Task;
 import com.nhnacademy.task.repository.CommentRepository;
-import com.nhnacademy.task.repository.TaskRepository;
 import com.nhnacademy.task.service.CommentService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
