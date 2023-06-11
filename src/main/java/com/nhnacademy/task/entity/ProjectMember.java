@@ -30,9 +30,9 @@ public class ProjectMember extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ProjectRole projectRole;
 
-    @MapsId("projectNum")
+    @MapsId("projectId")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_num")
+    @JoinColumn(name = "project_id")
     private Project project;
 
     @Builder

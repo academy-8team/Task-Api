@@ -14,11 +14,17 @@ package com.nhnacademy.task.entity.pk;
 
 import java.io.Serializable;
 import javax.persistence.Embeddable;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Embeddable
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProjectMemberPk implements Serializable {
-    private Long projectMemberNum;
-    private Long projectNum;
+    private Long projectMemberId;
+    private Long projectId;
+
 }
