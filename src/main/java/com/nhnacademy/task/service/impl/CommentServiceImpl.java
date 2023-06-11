@@ -25,12 +25,14 @@ import com.nhnacademy.task.repository.TaskRepository;
 import com.nhnacademy.task.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommentServiceImpl implements CommentService {
 
     private final ProjectRepository projectRepository;
@@ -44,6 +46,7 @@ public class CommentServiceImpl implements CommentService {
         return CommentDto.fromEntity(commentRepository.save(comment));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<CommentDto> getCommentsByTaskId(Long projectId, Long taskId) {
         Task task = getTask(projectId, taskId);
@@ -52,6 +55,7 @@ public class CommentServiceImpl implements CommentService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public CommentDto getCommentById(Long projectId, Long taskId, Long commentId) {
         Task task = getTask(projectId, taskId);

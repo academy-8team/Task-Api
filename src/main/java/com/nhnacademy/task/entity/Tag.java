@@ -33,6 +33,12 @@ public class Tag extends BaseTimeEntity {
 
     private String tagTitle;
 
+    @Builder
+    public Tag(Project project, String tagTitle) {
+        this.project = project;
+        this.tagTitle = tagTitle;
+    }
+
     public void update(String tagTitle) {
         this.tagTitle = tagTitle;
     }

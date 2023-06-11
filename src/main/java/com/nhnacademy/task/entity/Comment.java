@@ -37,6 +37,12 @@ public class Comment extends BaseTimeEntity {
     @Column(name = "content")
     private String content;
 
+    @Builder
+    public Comment(Task task, String content) {
+        this.task = task;
+        this.content = content;
+    }
+
     public void updateContent(String content) {
         this.content = content;
     }
