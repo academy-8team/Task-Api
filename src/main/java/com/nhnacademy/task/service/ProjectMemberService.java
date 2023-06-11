@@ -12,15 +12,17 @@
 
 package com.nhnacademy.task.service;
 
-import com.nhnacademy.task.dto.response.ProjectMemberResponseDto;
+import com.nhnacademy.task.dto.ProjectMemberDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProjectMemberService {
-    List<ProjectMemberResponseDto> getProjects(Long memberNum, int page);
 
-    Optional<ProjectMemberResponseDto> getProjectAdministratorByProjectNum(Long projectNum);
+    ProjectMemberDto createProjectMember(Long projectId, ProjectMemberDto projectMemberDto);
 
-    String registerProjectMember(Long projectNum, Long memberNum);
+    List<ProjectMemberDto> getProjectMembers(Long projectId);
+
+    ProjectMemberDto getProjectMemberById(Long projectId, Long projectMemberNum);
+
+    void deleteProjectMemberById(Long projectId, Long projectMemberNum);
 }

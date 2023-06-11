@@ -12,41 +12,46 @@
 
 package com.nhnacademy.task.controller;
 
-import com.nhnacademy.task.dto.response.ProjectMemberResponseDto;
+import com.nhnacademy.task.dto.ProjectMemberDto;
 import com.nhnacademy.task.service.ProjectMemberService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
-@RequiredArgsConstructor
+import javax.validation.Valid;
+import java.util.List;
+
 @RestController
+@RequestMapping("/projects/{projectId}/members")
+@RequiredArgsConstructor
 public class ProjectMemberController {
+
     private final ProjectMemberService projectMemberService;
 
-    @GetMapping("/project/member/{memberNum}")
-    public ResponseEntity<List<ProjectMemberResponseDto>> getProjectList(@PathVariable(name = "memberNum") Long memberNum, @RequestParam(name = "page") int page) {
-        List<ProjectMemberResponseDto> projectMembers = projectMemberService.getProjects(memberNum, page);
-        return ResponseEntity.ok().body(projectMembers);
-    }
-
-    @GetMapping("/project/{projectNum}/member/administrator")
-    public ResponseEntity<ProjectMemberResponseDto> getProjectAdministrator(@PathVariable(name = "projectNum") Long projectNum) {
-        return projectMemberService.getProjectAdministratorByProjectNum(projectNum)
-                .map(projectMember -> ResponseEntity.ok().body(projectMember))
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/project/{projectNum}/member/register")
-    public ResponseEntity<String> registerProjectMember(@PathVariable(name = "projectNum") Long projectNum, @RequestParam(name = "memberNum") Long memberNum) {
-        String result = projectMemberService.registerProjectMember(projectNum, memberNum);
-        if (result.equals("Project member registration successful")) {
-            return ResponseEntity.ok().body(result);
-        } else {
-            return ResponseEntity.badRequest().body(result);
+    @PostMapping
+    public ResponseEntity<?> createProjectMember(@PathVariable Long projectId, @Valid @RequestBody ProjectMemberDto projectMemberDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(projectMemberService.createProjectMember(projectId, projectMemberDto), HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProjectMemberDto>> getProjectMembers(@PathVariable Long projectId) {
+        return new ResponseEntity<>(projectMemberService.getProjectMembers(projectId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{memberId}")
+    public ResponseEntity<ProjectMemberDto> getProjectMember(@PathVariable Long projectId, @PathVariable Long memberId) {
+        return new ResponseEntity<>(projectMemberService.getProjectMemberById(projectId, memberId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{memberId}")
+    public ResponseEntity<Void> deleteProjectMember(@PathVariable Long projectId, @PathVariable Long memberId) {
+        projectMemberService.deleteProjectMemberById(projectId, memberId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
+

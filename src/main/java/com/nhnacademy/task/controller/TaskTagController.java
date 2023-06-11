@@ -12,32 +12,52 @@
 
 package com.nhnacademy.task.controller;
 
+import com.nhnacademy.task.dto.TaskTagDto;
 import com.nhnacademy.task.service.TaskTagService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
-@RequiredArgsConstructor
+import javax.validation.Valid;
+
 @RestController
+@RequestMapping("/projects/{projectId}/tasks/{taskId}/tags")
+@RequiredArgsConstructor
 public class TaskTagController {
+
     private final TaskTagService taskTagService;
 
-    @GetMapping("/project/{projectNum}/task/{taskNum}/taskTag")
-    public ResponseEntity<List<String>> getTaskTag(@PathVariable(value = "projectNum") Long projectNum,
-                                                   @PathVariable(value = "taskNum") Long taskNum) {
-        List<String> tags = taskTagService.getTaskTag(projectNum, taskNum);
-        return ResponseEntity.ok().body(tags);
+    @PostMapping("/{tagId}")
+    public ResponseEntity<?> addTagToTask(@PathVariable Long projectId, @PathVariable Long taskId, @PathVariable Long tagId, @Valid @RequestBody TaskTagDto taskTagDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
+        try {
+            return new ResponseEntity<>(taskTagService.addTagToTask(projectId, taskId, tagId, taskTagDto), HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @PostMapping("/project/{projectNum}/task/{taskNum}/tag/{tagNum}/taskTag/register")
-    public ResponseEntity<String> registerTaskTag(@PathVariable(value = "projectNum") Long projectNum,
-                                                  @PathVariable(value = "taskNum") Long taskNum,
-                                                  @PathVariable(value = "tagNum") Long tagNum) {
-        String result = taskTagService.registerTaskTag(projectNum, taskNum, tagNum);
-        return ResponseEntity.ok().body(result);
+    @GetMapping
+    public ResponseEntity<List<TaskTagDto>> getTagsForTask(@PathVariable Long projectId, @PathVariable Long taskId) {
+        try {
+            return ResponseEntity.ok(taskTagService.getTagsForTask(projectId, taskId));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{tagId}")
+    public ResponseEntity<?> removeTagFromTask(@PathVariable Long projectId, @PathVariable Long taskId, @PathVariable Long tagId) {
+        try {
+            taskTagService.removeTagFromTask(projectId, taskId, tagId);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

@@ -12,15 +12,19 @@
 
 package com.nhnacademy.task.service;
 
-import com.nhnacademy.task.dto.response.CommentResponseDto;
+import com.nhnacademy.task.dto.CommentDto;
+
 import java.util.List;
 
 public interface CommentService {
-    String registerComment(String commentContent, Long projectNum, Long taskNum, String wrtierId);
 
-    List<CommentResponseDto> getAllComment(Long projectNum, Long taskNum);
+    CommentDto createComment(Long projectId, Long taskId, CommentDto commentDto);
 
-    String updateComment(String commentContent, Long projectNum, Long taskNum, Long commentNum);
+    List<CommentDto> getCommentsByTaskId(Long projectId, Long taskId);
 
-    String deleteComment(Long projectNum, Long taskNum, Long commentNum);
+    CommentDto getCommentById(Long projectId, Long taskId, Long commentId);
+
+    CommentDto updateComment(Long projectId, Long taskId, Long commentId, CommentDto commentDto);
+
+    void deleteCommentById(Long projectId, Long taskId, Long commentId);
 }

@@ -12,51 +12,53 @@
 
 package com.nhnacademy.task.controller;
 
-import java.util.List;
-
-import com.nhnacademy.task.dto.response.CommentResponseDto;
+import com.nhnacademy.task.dto.CommentDto;
 import com.nhnacademy.task.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-@RequiredArgsConstructor
+import javax.validation.Valid;
+import java.util.List;
+
 @RestController
+@RequestMapping("/projects/{projectId}/tasks/{taskId}/comments")
+@RequiredArgsConstructor
 public class CommentController {
+
     private final CommentService commentService;
 
-    @PostMapping("/project/{projectNum}/task/{taskNum}/comment/register")
-    public ResponseEntity<String> registerComment(@PathVariable(value = "projectNum") Long projectNum,
-                                                  @PathVariable(value = "taskNum") Long taskNum,
-                                                  @RequestParam(value = "writerId") String writerId,
-                                                  @RequestParam(value = "commentContent") String commentContent) {
-        String result = commentService.registerComment(commentContent, projectNum, taskNum, writerId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    @PostMapping
+    public ResponseEntity<?> createComment(@PathVariable Long projectId, @PathVariable Long taskId, @Valid @RequestBody CommentDto commentDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(commentService.createComment(projectId, taskId, commentDto), HttpStatus.CREATED);
     }
 
-    @GetMapping("/project/{projectNum}/task/{taskNum}/comment/all")
-    public ResponseEntity<List<CommentResponseDto>> getAllComment(
-            @PathVariable(value = "projectNum") Long projectNum,
-            @PathVariable(value = "taskNum") Long taskNum) {
-        List<CommentResponseDto> comments = commentService.getAllComment(projectNum, taskNum);
-        return ResponseEntity.ok(comments);
+    @GetMapping
+    public ResponseEntity<List<CommentDto>> getComments(@PathVariable Long projectId, @PathVariable Long taskId) {
+        return new ResponseEntity<>(commentService.getCommentsByTaskId(projectId, taskId), HttpStatus.OK);
     }
 
-    @PutMapping("/project/{projectNum}/task/{taskNum}/comment/{commentNum}/update")
-    public ResponseEntity<String> updateComment(@RequestParam(value = "commentContent") String commentContent,
-                                                @PathVariable(value = "projectNum") Long projectNum,
-                                                @PathVariable(value = "taskNum") Long taskNum,
-                                                @PathVariable(value = "commentNum") Long commentNum) {
-        String result = commentService.updateComment(commentContent, projectNum, taskNum, commentNum);
-        return ResponseEntity.ok(result);
+    @GetMapping("/{commentId}")
+    public ResponseEntity<CommentDto> getComment(@PathVariable Long projectId, @PathVariable Long taskId, @PathVariable Long commentId) {
+        return new ResponseEntity<>(commentService.getCommentById(projectId, taskId, commentId), HttpStatus.OK);
     }
 
-    @DeleteMapping("/project/{projectNum}/task/{taskNum}/comment/{commentNum}/delete")
-    public ResponseEntity<String> deleteComment(@PathVariable(value = "projectNum") Long projectNum,
-                                                @PathVariable(value = "taskNum") Long taskNum,
-                                                @PathVariable(value = "commentNum") Long commentNum) {
-        String result = commentService.deleteComment(projectNum, taskNum, commentNum);
-        return ResponseEntity.ok(result);
+    @PutMapping("/{commentId}")
+    public ResponseEntity<?> updateComment(@PathVariable Long projectId, @PathVariable Long taskId, @PathVariable Long commentId, @Valid @RequestBody CommentDto commentDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(commentService.updateComment(projectId, taskId, commentId, commentDto), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long projectId, @PathVariable Long taskId, @PathVariable Long commentId) {
+        commentService.deleteCommentById(projectId, taskId, commentId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

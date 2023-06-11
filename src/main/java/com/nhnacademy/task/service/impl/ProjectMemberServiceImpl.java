@@ -12,71 +12,64 @@
 
 package com.nhnacademy.task.service.impl;
 
-import com.nhnacademy.task.dto.response.ProjectMemberResponseDto;
+import com.nhnacademy.task.dto.ProjectMemberDto;
 import com.nhnacademy.task.entity.Project;
 import com.nhnacademy.task.entity.ProjectMember;
-import com.nhnacademy.task.entity.ProjectRole;
-import com.nhnacademy.task.entity.pk.ProjectMemberPk;
+import com.nhnacademy.task.exception.ProjectMemberNotFoundException;
+import com.nhnacademy.task.exception.ProjectNotFoundException;
 import com.nhnacademy.task.repository.ProjectMemberRepository;
 import com.nhnacademy.task.repository.ProjectRepository;
 import com.nhnacademy.task.service.ProjectMemberService;
-
-import java.util.List;
-import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@RequiredArgsConstructor
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class ProjectMemberServiceImpl implements ProjectMemberService {
-    private static final int NUM_PER_PAGE = 5;
 
-    private final ProjectMemberRepository projectMemberRepository;
     private final ProjectRepository projectRepository;
+    private final ProjectMemberRepository projectMemberRepository;
 
     @Override
-    @Transactional(readOnly = true)
-    public List<ProjectMemberResponseDto> getProjects(Long memberNum, int page) {
-        Pageable pageable = PageRequest.of(page, NUM_PER_PAGE);
+    public ProjectMemberDto createProjectMember(Long projectId, ProjectMemberDto projectMemberDto) {
+        Project project = getProject(projectId);
+        ProjectMember projectMember = projectMemberDto.toEntity(project);
+        return ProjectMemberDto.fromEntity(projectMemberRepository.save(projectMember));
+    }
 
-        return projectMemberRepository.findByProjectMemberPkProjectMemberNum(memberNum, pageable)
-                .getContent();
+    @Transactional(readOnly = true)
+    @Override
+    public List<ProjectMemberDto> getProjectMembers(Long projectId) {
+        Project project = getProject(projectId);
+        return projectMemberRepository.findByProject(project).stream()
+                .map(ProjectMemberDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public ProjectMemberDto getProjectMemberById(Long projectId, Long projectMemberNum) {
+        Project project = getProject(projectId);
+        ProjectMember projectMember = projectMemberRepository.findByProjectAndProjectMemberId(project, projectMemberNum)
+                .orElseThrow(ProjectMemberNotFoundException::new);
+        return ProjectMemberDto.fromEntity(projectMember);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<ProjectMemberResponseDto> getProjectAdministratorByProjectNum(Long projectNum) {
-        return Optional.ofNullable(projectMemberRepository.findByProjectMemberPkProjectNumAndProjectRole(projectNum,
-                ProjectRole.PROJECT_ROLE_ADMIN.toString()));
+    public void deleteProjectMemberById(Long projectId, Long projectMemberNum) {
+        Project project = getProject(projectId);
+        ProjectMember projectMember = projectMemberRepository.findByProjectAndProjectMemberId(project, projectMemberNum)
+                .orElseThrow(ProjectMemberNotFoundException::new);
+        projectMemberRepository.delete(projectMember);
     }
-    @Override
-    @Transactional
-    public String registerProjectMember(Long projectNum, Long memberNum) {
-        ProjectMemberPk projectMemberPk = ProjectMemberPk.builder()
-                .projectNum(projectNum)
-                .projectMemberNum(memberNum)
-                .build();
 
-        if (projectMemberRepository.existsById(projectMemberPk)) {
-            return "이미 존재하는 멤버입니다";
-        }
-
-        Project project = projectRepository.findById(projectNum)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트 입니다."));
-
-        ProjectMember projectMember = ProjectMember.builder()
-                .projectMemberPk(projectMemberPk)
-                .project(project)
-                .projectRole(ProjectRole.PROJECT_ROLE_USER)
-                .build();
-
-        projectMemberRepository.save(projectMember);
-
-        return "해당 멤버가 저장되었습니다.";
+    private Project getProject(Long projectId) {
+        return projectRepository.findById(projectId)
+                .orElseThrow(ProjectNotFoundException::new);
     }
 }
-

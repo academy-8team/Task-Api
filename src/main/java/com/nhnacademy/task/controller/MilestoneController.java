@@ -2,7 +2,7 @@
  * packageName :  com.nhnacademy.project.controller
  * fileName : MilestoneController
  * author :  ichunghui
- * date : 2023/06/02 
+ * date : 2023/06/02
  * description :
  * ===========================================================
  * DATE                 AUTHOR                NOTE
@@ -12,60 +12,59 @@
 
 package com.nhnacademy.task.controller;
 
-import com.nhnacademy.task.dto.response.MilestoneResponseDto;
-
-import java.util.List;
-
+import com.nhnacademy.task.dto.MilestoneDto;
 import com.nhnacademy.task.service.MilestoneService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-@RequiredArgsConstructor
+import javax.validation.Valid;
+import java.util.List;
+
+
 @RestController
+@RequestMapping("/projects/{projectId}/milestones")
+@RequiredArgsConstructor
 public class MilestoneController {
+
     private final MilestoneService milestoneService;
 
-    @PostMapping("/project/{projectNum}/milestone/create")
-    public ResponseEntity<String> createMilestone(@PathVariable(value = "projectNum") Long projectNum,
-                                                  @RequestParam(value = "milestoneTitle") String milestoneTitle) {
-        String result = milestoneService.createMilestone(projectNum, milestoneTitle);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<MilestoneDto> createMilestone(@PathVariable Long projectId,
+                                                        @Valid @RequestBody MilestoneDto milestoneDto,
+                                                        BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(milestoneService.createMilestone(projectId, milestoneDto), HttpStatus.CREATED);
     }
 
-    @GetMapping("/project/{projectNum}/milestone")
-    public ResponseEntity<List<MilestoneResponseDto>> findAllMilestone(@PathVariable(value = "projectNum") Long projectNum) {
-        List<MilestoneResponseDto> milestones = milestoneService.findAllMilestone(projectNum);
-        return new ResponseEntity<>(milestones, HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<MilestoneDto>> getMilestones(@PathVariable Long projectId) {
+        return new ResponseEntity<>(milestoneService.getMilestonesByProjectId(projectId), HttpStatus.OK);
     }
 
-    @PutMapping("/project/{projectNum}/milestone/{milestoneNum}/register")
-    public ResponseEntity<String> updateMilestone(@PathVariable(value = "projectNum") Long projectNum,
-                                                  @PathVariable(value = "milestoneNum") Long milestoneNum,
-                                                  @RequestParam(value = "milestoneTitle") String milestoneTitle) {
-        String result = milestoneService.updateMilestone(projectNum, milestoneNum, milestoneTitle);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    @GetMapping("/{milestoneId}")
+    public ResponseEntity<MilestoneDto> getMilestone(@PathVariable Long projectId, @PathVariable Long milestoneId) {
+        return new ResponseEntity<>(milestoneService.getMilestoneById(projectId, milestoneId), HttpStatus.OK);
     }
 
-    @DeleteMapping("/project/{projectNum}/milestone/{milestoneNum}/delete")
-    public ResponseEntity<String> deleteMilestone(@PathVariable(value = "projectNum") Long projectNum,
-                                                  @PathVariable(value = "milestoneNum") Long milestoneNum) {
-        String result = milestoneService.deleteMilestone(projectNum, milestoneNum);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    @PutMapping("/{milestoneId}")
+    public ResponseEntity<MilestoneDto> updateMilestone(@PathVariable Long projectId,
+                                                        @PathVariable Long milestoneId,
+                                                        @Valid @RequestBody MilestoneDto milestoneDto,
+                                                        BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(milestoneService.updateMilestone(projectId, milestoneId, milestoneDto), HttpStatus.OK);
     }
 
-    @GetMapping("/project/{projectNum}/task/{taskNum}/milestone/select")
-    public ResponseEntity<List<MilestoneResponseDto>> getMilestoneByProjectNum(@PathVariable(value = "projectNum") Long projectNum,
-                                                                               @PathVariable(value = "taskNum") Long taskNum) {
-        List<MilestoneResponseDto> milestones = milestoneService.getMilestoneByProjectNum(projectNum, taskNum);
-        return new ResponseEntity<>(milestones, HttpStatus.OK);
-    }
-
-    @GetMapping("/project/{projectNum}/task/{taskNum}/milestone")
-    public ResponseEntity<String> getMilestoneInTask(@PathVariable(value = "projectNum") Long projectNum,
-                                                     @PathVariable(value = "taskNum") Long taskNum) {
-        String result = milestoneService.getMilestoneByTaskNum(projectNum, taskNum);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    @DeleteMapping("/{milestoneId}")
+    public ResponseEntity<Void> deleteMilestone(@PathVariable Long projectId, @PathVariable Long milestoneId) {
+        milestoneService.deleteMilestoneById(projectId, milestoneId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
