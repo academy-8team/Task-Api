@@ -12,10 +12,16 @@
 
 package com.nhnacademy.task.service;
 
+
+import com.nhnacademy.task.dto.TaskTagDto;
+
 import java.util.List;
 
 public interface TaskTagService {
-    List<String> getTaskTag(Long projectNum, Long taskNum);
 
-    String registerTaskTag(Long projectNum, Long taskNum, Long tagNum);
+    TaskTagDto addTagToTask(Long projectId, Long taskId, Long tagId, TaskTagDto taskTagDto);
+
+    List<TaskTagDto> getTagsForTask(Long projectId, Long taskId);
+
+    void removeTagFromTask(Long projectId, Long taskId, Long tagId);
 }

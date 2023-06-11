@@ -13,7 +13,9 @@
 package com.nhnacademy.task.exception;
 
 public class CommentNotFoundException extends RuntimeException {
-    public CommentNotFoundException(String s) {
+    public static final String MESSAGE = "댓글을 찾을 수 수 없습니다.";
+    public CommentNotFoundException() {
+        super(MESSAGE);
     }
 }
 

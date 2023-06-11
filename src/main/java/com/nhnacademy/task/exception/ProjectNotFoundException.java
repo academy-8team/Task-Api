@@ -13,7 +13,9 @@
 package com.nhnacademy.task.exception;
 
 public class ProjectNotFoundException extends RuntimeException {
-    public ProjectNotFoundException(String s) {
+    public static final String MESSAGE = "프로젝트를 찾을 수 없습니다.";
+    public ProjectNotFoundException() {
+        super(MESSAGE);
     }
 }
 

@@ -36,7 +36,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskDto createTask(Long projectId, TaskDto taskDto) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + projectId + " not found"));
+                .orElseThrow(ProjectNotFoundException::new);
         Task task = taskDto.toEntity(project);
         return TaskDto.fromEntity(taskRepository.save(task));
     }
@@ -44,7 +44,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskDto> getTasksByProjectId(Long projectId) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + projectId + " not found"));
+                .orElseThrow(ProjectNotFoundException::new);
         return taskRepository.findByProject(project).stream()
                 .map(TaskDto::fromEntity)
                 .collect(Collectors.toList());
@@ -53,7 +53,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskDto getTaskById(Long projectId, Long taskId) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + projectId + " not found"));
+                .orElseThrow(ProjectNotFoundException::new);
         Task task = taskRepository.findByProjectAndTaskId(project, taskId)
                 .orElseThrow(TaskNotFoundException::new);
         return TaskDto.fromEntity(task);
@@ -62,7 +62,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskDto updateTask(Long projectId, Long taskId, TaskDto taskDto) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + projectId + " not found"));
+                .orElseThrow(ProjectNotFoundException::new);
         Task task = taskRepository.findByProjectAndTaskId(project, taskId)
                 .orElseThrow(TaskNotFoundException::new);
         task.update(taskDto.getTaskTitle(), taskDto.getTaskContent());
@@ -74,7 +74,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTaskById(Long projectId, Long taskId) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + projectId + " not found"));
+                .orElseThrow(ProjectNotFoundException::new);
         Task task = taskRepository.findByProjectAndTaskId(project, taskId)
                 .orElseThrow(TaskNotFoundException::new);
         taskRepository.delete(task);

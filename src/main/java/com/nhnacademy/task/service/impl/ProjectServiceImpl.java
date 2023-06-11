@@ -48,13 +48,13 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectDto getProjectById(Long projectId) {
         return projectRepository.findById(projectId)
                 .map(ProjectDto::fromEntity)
-                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + projectId + " not found"));
+                .orElseThrow(ProjectNotFoundException::new);
     }
 
     @Override
     public void deleteProjectById(Long projectId) {
         if (!projectRepository.existsById(projectId)) {
-            throw new ProjectNotFoundException("Project with id " + projectId + " not found");
+            throw new ProjectNotFoundException();
         }
         projectRepository.deleteById(projectId);
     }
@@ -62,7 +62,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectDto updateProject(Long projectId, ProjectDto projectDto) {
         Project existingProject = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + projectId + " not found"));
+                .orElseThrow(ProjectNotFoundException::new);
 
         existingProject.updateAttributes(projectDto.getProjectName(), projectDto.getProjectDescription(), projectDto.getProjectStatus());
 

@@ -36,7 +36,7 @@ public class MilestoneController {
                                                         @Valid @RequestBody MilestoneDto milestoneDto,
                                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            // handle errors here
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(milestoneService.createMilestone(projectId, milestoneDto), HttpStatus.CREATED);
     }
@@ -57,7 +57,7 @@ public class MilestoneController {
                                                         @Valid @RequestBody MilestoneDto milestoneDto,
                                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            // handle errors here
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(milestoneService.updateMilestone(projectId, milestoneId, milestoneDto), HttpStatus.OK);
     }

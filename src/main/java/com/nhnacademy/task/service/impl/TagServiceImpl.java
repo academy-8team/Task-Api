@@ -36,7 +36,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagDto createTag(Long projectId, TagDto tagDto) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + projectId + " not found"));
+                .orElseThrow(ProjectNotFoundException::new);
         Tag tag = tagDto.toEntity(project);
         return TagDto.fromEntity(tagRepository.save(tag));
     }
@@ -44,7 +44,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<TagDto> getTagsByProjectId(Long projectId) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + projectId + " not found"));
+                .orElseThrow(ProjectNotFoundException::new);
         return tagRepository.findByProject(project).stream()
                 .map(TagDto::fromEntity)
                 .collect(Collectors.toList());

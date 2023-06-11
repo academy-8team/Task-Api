@@ -36,7 +36,7 @@ public class MilestoneServiceImpl implements MilestoneService {
     @Override
     public MilestoneDto createMilestone(Long projectId, MilestoneDto milestoneDto) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + projectId + " not found"));
+                .orElseThrow(ProjectNotFoundException::new);
         Milestone milestone = milestoneDto.toEntity(project);
         return MilestoneDto.fromEntity(milestoneRepository.save(milestone));
     }
@@ -44,7 +44,7 @@ public class MilestoneServiceImpl implements MilestoneService {
     @Override
     public List<MilestoneDto> getMilestonesByProjectId(Long projectId) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + projectId + " not found"));
+                .orElseThrow(ProjectNotFoundException::new);
         return milestoneRepository.findByProject(project).stream()
                 .map(MilestoneDto::fromEntity)
                 .collect(Collectors.toList());
@@ -53,7 +53,7 @@ public class MilestoneServiceImpl implements MilestoneService {
     @Override
     public MilestoneDto getMilestoneById(Long projectId, Long milestoneId) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + projectId + " not found"));
+                .orElseThrow(ProjectNotFoundException::new);
         Milestone milestone = milestoneRepository.findByProjectAndMilestoneId(project, milestoneId)
                 .orElseThrow(MilestoneNotFoundException::new);
         return MilestoneDto.fromEntity(milestone);
@@ -62,7 +62,7 @@ public class MilestoneServiceImpl implements MilestoneService {
     @Override
     public MilestoneDto updateMilestone(Long projectId, Long milestoneId, MilestoneDto milestoneDto) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + projectId + " not found"));
+                .orElseThrow(ProjectNotFoundException::new);
         Milestone milestone = milestoneRepository.findByProjectAndMilestoneId(project, milestoneId)
                 .orElseThrow(MilestoneNotFoundException::new);
         milestone.updateMilestoneTitle(milestoneDto.getMilestoneTitle());
@@ -72,7 +72,7 @@ public class MilestoneServiceImpl implements MilestoneService {
     @Override
     public void deleteMilestoneById(Long projectId, Long milestoneId) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + projectId + " not found"));
+                .orElseThrow(ProjectNotFoundException::new);
         Milestone milestone = milestoneRepository.findByProjectAndMilestoneId(project, milestoneId)
                 .orElseThrow(MilestoneNotFoundException::new);
         milestoneRepository.delete(milestone);

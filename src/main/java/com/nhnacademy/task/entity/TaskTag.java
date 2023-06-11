@@ -27,14 +27,14 @@ public class TaskTag extends BaseTimeEntity {
     @EmbeddedId
     private TaskTagPk taskTagPk;
 
-    @MapsId("tagNum")
+    @MapsId("tagId")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tag_num")
+    @JoinColumn(name = "tag_id")
     private Tag tag;
 
-    @MapsId("taskNum")
+    @MapsId("taskId")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_num")
+    @JoinColumn(name = "task_id")
     private Task task;
 
     @Builder

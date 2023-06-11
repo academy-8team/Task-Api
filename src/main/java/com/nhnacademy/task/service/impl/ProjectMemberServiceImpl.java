@@ -52,7 +52,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     public ProjectMemberDto getProjectMemberById(Long projectId, Long projectMemberNum) {
         Project project = getProject(projectId);
         ProjectMember projectMember = projectMemberRepository.findByProjectAndProjectMemberId(project, projectMemberNum)
-                .orElseThrow(() -> new ProjectMemberNotFoundException("ProjectMember with id " + projectMemberNum + " not found"));
+                .orElseThrow(ProjectMemberNotFoundException::new);
         return ProjectMemberDto.fromEntity(projectMember);
     }
 
@@ -60,12 +60,12 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     public void deleteProjectMemberById(Long projectId, Long projectMemberNum) {
         Project project = getProject(projectId);
         ProjectMember projectMember = projectMemberRepository.findByProjectAndProjectMemberId(project, projectMemberNum)
-                .orElseThrow(() -> new ProjectMemberNotFoundException("ProjectMember with id " + projectMemberNum + " not found"));
+                .orElseThrow(ProjectMemberNotFoundException::new);
         projectMemberRepository.delete(projectMember);
     }
 
     private Project getProject(Long projectId) {
         return projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + projectId + " not found"));
+                .orElseThrow(ProjectNotFoundException::new);
     }
 }

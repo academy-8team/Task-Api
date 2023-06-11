@@ -12,63 +12,65 @@
 
 package com.nhnacademy.task.service.impl;
 
-import com.nhnacademy.task.dto.response.TaskTagResponseDto;
+import com.nhnacademy.task.dto.TaskTagDto;
+import com.nhnacademy.task.entity.Project;
 import com.nhnacademy.task.entity.Tag;
 import com.nhnacademy.task.entity.Task;
 import com.nhnacademy.task.entity.TaskTag;
 import com.nhnacademy.task.entity.pk.TaskTagPk;
+import com.nhnacademy.task.exception.ProjectNotFoundException;
+import com.nhnacademy.task.exception.TagNotFoundException;
+import com.nhnacademy.task.exception.TaskNotFoundException;
+import com.nhnacademy.task.exception.TaskTagNotFoundException;
+import com.nhnacademy.task.repository.ProjectRepository;
+import com.nhnacademy.task.repository.TagRepository;
+import com.nhnacademy.task.repository.TaskRepository;
 import com.nhnacademy.task.repository.TaskTagRepository;
 import com.nhnacademy.task.service.TaskTagService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class TaskTagServiceImpl implements TaskTagService {
+
     private final TaskTagRepository taskTagRepository;
     private final TaskRepository taskRepository;
     private final TagRepository tagRepository;
 
     @Override
-    @Transactional(readOnly = true)
-    public List<String> getTaskTag(Long projectNum, Long taskNum) {
-        Task task =  taskRepository.findById(taskNum)
-                .orElseThrow(() -> new IllegalArgumentException("해당 task가 존재하지 않습니다"));
+    public TaskTagDto addTagToTask(Long projectId, Long taskId, Long tagId, TaskTagDto taskTagDto) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(TaskNotFoundException::new);
 
-        List<TaskTagResponseDto> taskTags = taskTagRepository.findByTask(task);
-
-        return taskTags.stream()
-                .map(taskTagResponseDto -> taskTagResponseDto.getTag().getTagTitle())
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional
-    public String registerTaskTag(Long projectNum, Long taskNum, Long tagNum) {
-        Task task = taskRepository.findById(taskNum)
-                .orElseThrow(() -> new IllegalArgumentException("해당 task가 존재하지 않습니다"));
-
-        Tag tag = tagRepository.findById(tagNum)
-                .orElseThrow(() -> new IllegalArgumentException("해당 tag가 프로젝트 내에 존재하지 않습니다"));
-
-        TaskTagPk taskTagPk = TaskTagPk.builder()
-                .taskNum(taskNum)
-                .tagNum(tagNum)
-                .build();
+        Tag tag = tagRepository.findById(tagId)
+                .orElseThrow(TagNotFoundException::new);
 
         TaskTag taskTag = TaskTag.builder()
-                .taskTagPk(taskTagPk)
-                .task(task)
+                .taskTagPk(new TaskTagPk(tagId, taskId))
                 .tag(tag)
+                .task(task)
                 .build();
 
         taskTagRepository.save(taskTag);
 
-        return "task tag가 등록되었습니다";
+        return TaskTagDto.fromEntity(taskTag);
+    }
+
+    @Override
+    public List<TaskTagDto> getTagsForTask(Long projectId, Long taskId) {
+        return taskTagRepository. findByTaskTagPkTaskIdAndTaskProjectId(taskId, projectId).stream()
+                .map(TaskTagDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void removeTagFromTask(Long projectId, Long taskId, Long tagId) {
+        TaskTag taskTag = taskTagRepository.findByTaskTagPk(new TaskTagPk(tagId, taskId))
+                .orElseThrow(TagNotFoundException::new);
+        taskTagRepository.delete(taskTag);
     }
 }

@@ -12,13 +12,18 @@
 
 package com.nhnacademy.task.repository;
 
-import com.nhnacademy.task.dto.response.TaskTagResponseDto;
-import com.nhnacademy.task.entity.Task;
 import com.nhnacademy.task.entity.TaskTag;
 import com.nhnacademy.task.entity.pk.TaskTagPk;
-import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
+@Repository
 public interface TaskTagRepository extends JpaRepository<TaskTag, TaskTagPk> {
-    List<TaskTagResponseDto> findByTask(Task task);
+
+    Optional<TaskTag> findByTaskTagPk(TaskTagPk taskTagPk);
+
+    List<TaskTag> findByTaskTagPkTaskIdAndTaskProjectId(Long taskId, Long projectId);
 }

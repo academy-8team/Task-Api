@@ -56,7 +56,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto getCommentById(Long projectId, Long taskId, Long commentId) {
         Task task = getTask(projectId, taskId);
         Comment comment = commentRepository.findByTaskAndCommentId(task, commentId)
-                .orElseThrow(() -> new CommentNotFoundException("Comment with id " + commentId + " not found"));
+                .orElseThrow(CommentNotFoundException::new);
         return CommentDto.fromEntity(comment);
     }
 
@@ -64,7 +64,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto updateComment(Long projectId, Long taskId, Long commentId, CommentDto commentDto) {
         Task task = getTask(projectId, taskId);
         Comment comment = commentRepository.findByTaskAndCommentId(task, commentId)
-                .orElseThrow(() -> new CommentNotFoundException("Comment with id " + commentId + " not found"));
+                .orElseThrow(CommentNotFoundException::new);
         comment.updateContent(commentDto.getContent());
         commentRepository.save(comment);
         return CommentDto.fromEntity(comment);
@@ -74,13 +74,13 @@ public class CommentServiceImpl implements CommentService {
     public void deleteCommentById(Long projectId, Long taskId, Long commentId) {
         Task task = getTask(projectId, taskId);
         Comment comment = commentRepository.findByTaskAndCommentId(task, commentId)
-                .orElseThrow(() -> new CommentNotFoundException("Comment with id " + commentId + " not found"));
+                .orElseThrow(CommentNotFoundException::new);
         commentRepository.delete(comment);
     }
 
     private Task getTask(Long projectId, Long taskId) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException("Project with id " + projectId + " not found"));
+                .orElseThrow(ProjectNotFoundException::new);
         return taskRepository.findByProjectAndTaskId(project, taskId)
                 .orElseThrow(TaskNotFoundException::new);
     }
