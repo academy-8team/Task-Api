@@ -43,7 +43,7 @@ public class Task extends BaseTimeEntity {
     private String taskContent;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "milestone_num")
+    @JoinColumn(name = "milestone_id")
     private Milestone milestone;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)

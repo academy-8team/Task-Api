@@ -5,30 +5,36 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
 @Table(name = "milestones")
 public class Milestone extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long milestoneNum;
+    @Column(name = "milestone_id")
+    private Long milestoneId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_num")
-    private Project project;
-
+    @NotNull
+    @Size(min=2, max=30)
+    @Column(name = "milestone_title")
     private String milestoneTitle;
 
-    @OneToOne(mappedBy = "milestone", cascade = CascadeType.REMOVE)
-    @JsonIgnore
-    private Task task;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     @Builder
-    public Milestone(Project project, String milestoneTitle) {
+    public Milestone(String milestoneTitle, Project project) {
+        this.milestoneTitle = milestoneTitle;
         this.project = project;
+    }
+
+    public void updateMilestoneTitle(String milestoneTitle) {
         this.milestoneTitle = milestoneTitle;
     }
 }
