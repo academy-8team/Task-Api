@@ -46,11 +46,11 @@ public class Task extends BaseTimeEntity {
     @JoinColumn(name = "milestone_id")
     private Milestone milestone;
 
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "task")
     @JsonIgnore
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "task")
     @JsonIgnore
     private List<TaskTag> taskTags = new ArrayList<>();
 

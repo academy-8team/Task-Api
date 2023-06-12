@@ -31,19 +31,19 @@ public class Project extends BaseTimeEntity{
     @Enumerated(EnumType.STRING)
     private ProjectStatus projectStatus;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project")
     @JsonIgnore
     private List<Task> tasks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project")
     @JsonIgnore
     private List<ProjectMember> projectMembers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project")
     @JsonIgnore
     private List<Tag> tags = new ArrayList<>();
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project")
     @JsonIgnore
     private List<Milestone> milestones = new ArrayList<>();
 

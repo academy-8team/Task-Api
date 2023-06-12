@@ -69,7 +69,7 @@ public class CommentServiceImpl implements CommentService {
         Task task = getTask(projectId, taskId);
         Comment comment = commentRepository.findByTaskAndCommentId(task, commentId)
                 .orElseThrow(CommentNotFoundException::new);
-        comment.updateContent(commentDto.getContent());
+        comment.updateContent(commentDto.getCommentContent());
         commentRepository.save(comment);
         return CommentDto.fromEntity(comment);
     }

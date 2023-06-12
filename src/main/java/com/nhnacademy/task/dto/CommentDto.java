@@ -26,16 +26,16 @@ import lombok.Setter;
 public class CommentDto {
 
     private Long commentId;
-    private String content;
+    private String commentContent;
 
     public Comment toEntity(Task task) {
         return Comment.builder()
                 .task(task)
-                .content(this.content)
+                .commentContent(this.commentContent)
                 .build();
     }
 
     public static CommentDto fromEntity(Comment comment) {
-        return new CommentDto(comment.getCommentId(), comment.getContent());
+        return new CommentDto(comment.getCommentId(), comment.getCommentContent());
     }
 }

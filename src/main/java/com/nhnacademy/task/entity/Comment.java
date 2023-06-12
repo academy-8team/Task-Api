@@ -34,16 +34,16 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "task_id")
     private Task task;
 
-    @Column(name = "content")
-    private String content;
+    @Column(name = "comment_content")
+    private String commentContent;
 
     @Builder
-    public Comment(Task task, String content) {
+    public Comment(Task task, String commentContent) {
         this.task = task;
-        this.content = content;
+        this.commentContent = commentContent;
     }
 
     public void updateContent(String content) {
-        this.content = content;
+        this.commentContent = content;
     }
 }
