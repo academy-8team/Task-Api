@@ -12,53 +12,45 @@
 
 package com.nhnacademy.task.controller;
 
-import com.nhnacademy.task.dto.TagDto;
+import com.nhnacademy.task.dto.respond.TagRespondDto;
 import com.nhnacademy.task.service.TagService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
-@RestController
-@RequestMapping("/projects/{projectId}/tags")
 @RequiredArgsConstructor
+@RestController // todo 11 - restful하게 api를 수정하고, 네이밍 규칙을 지킵니다. 또한, ResponseEntity와 @Valid, BindingResult를 사용합니다.
 public class TagController {
-
     private final TagService tagService;
 
-    @PostMapping
-    public ResponseEntity<?> createTag(@PathVariable Long projectId, @Valid @RequestBody TagDto tagDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(tagService.createTag(projectId, tagDto), HttpStatus.CREATED);
+    @GetMapping("/project/{projectNum}/create")
+    public String createTag(@PathVariable(value = "projectNum") Long projectNum,
+                            @RequestParam(value = "tagTitle") String tagTitle) {
+        return tagService.createTag(projectNum, tagTitle);
     }
 
-    @GetMapping
-    public ResponseEntity<List<TagDto>> getTags(@PathVariable Long projectId) {
-        return new ResponseEntity<>(tagService.getTagsByProjectId(projectId), HttpStatus.OK);
+    @GetMapping("/project/{projectNum}/tag")
+    public List<TagRespondDto> findAllTag(@PathVariable(value = "projectNum") Long projectNum) {
+        return tagService.findAllTag(projectNum);
     }
 
-    @GetMapping("/{tagId}")
-    public ResponseEntity<TagDto> getTag(@PathVariable Long projectId, @PathVariable Long tagId) {
-        return new ResponseEntity<>(tagService.getTagById(projectId, tagId), HttpStatus.OK);
+    @GetMapping("/project/{projectNum}/tag/{tagNum}/register")
+    public String updateTag(@PathVariable(value = "projectNum") Long projectNum,
+                            @PathVariable(value = "tagNum") Long tagNum,
+                            @RequestParam(value = "tagTitle") String tagTitle) {
+        return tagService.updateTag(projectNum, tagNum, tagTitle);
     }
 
-    @DeleteMapping("/{tagId}")
-    public ResponseEntity<Void> deleteTag(@PathVariable Long projectId, @PathVariable Long tagId) {
-        tagService.deleteTagById(projectId, tagId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @GetMapping("/project/{projectNum}/tag/{tagNum}/delete")
+    public String deleteTag(@PathVariable(value = "projectNum") Long projectNum,
+                            @PathVariable(value = "tagNum") Long tagNum) {
+        return tagService.deleteTag(projectNum, tagNum);
     }
 
-    @PutMapping("/{tagId}")
-    public ResponseEntity<?> updateTag(@PathVariable Long projectId, @PathVariable Long tagId, @Valid @RequestBody TagDto tagDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(tagService.updateTag(projectId, tagId, tagDto), HttpStatus.OK);
+    @GetMapping("/project/{projectNum}/task/{taskNum}/tag/select")
+    public List<TagRespondDto> getTagByProjectNum(@PathVariable(value = "projectNum") Long projectNum,
+                                                  @PathVariable(value = "taskNum") Long taskNum) {
+        return tagService.getTagByProjectNum(projectNum, taskNum);
     }
 }

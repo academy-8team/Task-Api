@@ -1,45 +1,25 @@
-/**
- * packageName :  com.nhnacademy.task.entity
- * fileName : Tag
- * author :  ichunghui
- * date : 2023/06/06 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/06                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.entity;
-
-import javax.persistence.*;
 
 import lombok.*;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
-@Table(name = "tags")
-public class Tag extends BaseTimeEntity {
+import javax.persistence.*;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Entity // todo 5 -  Tag Entity에  Builder를 테이블 전체에 사용하지 않도록 한다. 또한 네이밍 규칙을 고려하여 고친다. 필요하다면 update 메서드를 추가한다.
+public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "tag_id")
-    private Long tagId;
+    @Column(name = "tag_num")
+    private Long tagNum;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
+    @ManyToOne
+    @JoinColumn(name = "project_num")
     private Project project;
 
+    @Column(name = "tag_title")
     private String tagTitle;
-
-    @Builder
-    public Tag(Project project, String tagTitle) {
-        this.project = project;
-        this.tagTitle = tagTitle;
-    }
-
-    public void update(String tagTitle) {
-        this.tagTitle = tagTitle;
-    }
 }

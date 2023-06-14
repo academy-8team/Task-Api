@@ -1,38 +1,34 @@
 package com.nhnacademy.task.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "milestones")
-public class Milestone extends BaseTimeEntity {
-
+@Setter
+@Entity //todo 2 : Milestone Entity에 Setter를 제거하고, Builder를 테이블 전체에 사용하지 않도록 한다. 또한 네이밍 규칙을 고려하여 고친다. 필요하다면 update 메서드를 추가한다.
+public class Milestone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "milestone_id")
-    private Long milestoneId;
+    @Column(name = "milestone_num")
+    private Long milestoneNum;
 
-    @NotNull
-    @Size(min=2, max=30)
-    @Column(name = "milestone_title")
-    private String milestoneTitle;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
+    @ManyToOne
+    @JoinColumn(name = "project_num")
     private Project project;
 
-    @Builder
-    public Milestone(String milestoneTitle, Project project) {
-        this.milestoneTitle = milestoneTitle;
-        this.project = project;
-    }
+    @Column(name = "milestone_title")
+    @Size(min = 2, max = 30)
+    @Length(min = 2, max = 30)
+    private String milestoneTitle;
 
-    public void updateMilestoneTitle(String milestoneTitle) {
-        this.milestoneTitle = milestoneTitle;
-    }
+    @OneToOne(mappedBy = "milestone")
+    @JsonIgnore
+    private Task task;
 }

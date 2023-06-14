@@ -12,65 +12,42 @@
 
 package com.nhnacademy.task.controller;
 
-import com.nhnacademy.task.dto.ProjectDto;
+import com.nhnacademy.task.dto.request.ProjectRequestDto;
+import com.nhnacademy.task.dto.respond.ProjectRespondDto;
 import com.nhnacademy.task.service.ProjectService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/projects")
+@RequestMapping("/project") // RESTful naming convention, resource should be plural
 public class ProjectController {
 
     private final ProjectService projectService;
 
     @PostMapping
-    public ResponseEntity<ProjectDto> createProject(@Valid @RequestBody ProjectDto projectDto, BindingResult bindingResult) {
+    public ResponseEntity<ProjectRespondDto> createProject(@RequestBody @Valid ProjectRequestDto projectRequestDto,
+                                                           @PathVariable Long memberNum,
+                                                           BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(projectService.createProject(projectDto));
+
+        return projectService.createProject(projectRequestDto, memberNum)
+                .map(project -> new ResponseEntity<>(project, HttpStatus.CREATED))
+                .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    @GetMapping
-    public ResponseEntity<List<ProjectDto>> getAccessibleProjects() {
-        return ResponseEntity.ok(projectService.getAccessibleProjects());
-    }
-
-    @GetMapping("/{project-id}")
-    public ResponseEntity<ProjectDto> getProjectById(@PathVariable("project-id") Long projectId) {
-        try {
-            return ResponseEntity.ok(projectService.getProjectById(projectId));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{project-id}")
-    public ResponseEntity<Void> deleteProjectById(@PathVariable("project-id") Long projectId) {
-        try {
-            projectService.deleteProjectById(projectId);
-            return ResponseEntity.noContent().build();
-        } catch (EmptyResultDataAccessException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PutMapping("/{project-id}")
-    public ResponseEntity<ProjectDto> updateProject(@PathVariable("project-id") Long projectId, @Valid @RequestBody ProjectDto projectDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().build();
-        }
-        try {
-            return ResponseEntity.ok(projectService.updateProject(projectId, projectDto));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/{projectId}")
+    public ResponseEntity<ProjectRespondDto> getProject(@PathVariable Long projectId) {
+        return projectService.getProjectByProjectNum(projectId)
+                .map(project -> new ResponseEntity<>(project, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

@@ -1,46 +1,29 @@
-/**
- * packageName :  com.nhnacademy.task.entity
- * fileName : TaskTag
- * author :  ichunghui
- * date : 2023/06/06 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/06                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.entity;
 
 import com.nhnacademy.task.entity.pk.TaskTagPk;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import lombok.*;
-
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
-@Table(name = "task_tags")
-public class TaskTag extends BaseTimeEntity {
-
+@Entity // todo 7 -  Task Entity에  Builder를 테이블 전체에 사용하지 않도록 한다. 또한 네이밍 규칙을 고려하여 고친다. 필요하다면 update 메서드를 추가한다.
+public class TaskTag {
     @EmbeddedId
     private TaskTagPk taskTagPk;
 
-    @MapsId("tagId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tag_id")
+    @MapsId("tagNum")
+    @ManyToOne
+    @JoinColumn(name = "tag_num")
     private Tag tag;
 
-    @MapsId("taskId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_id")
+    @MapsId("taskNum")
+    @ManyToOne
+    @JoinColumn(name = "task_num")
     private Task task;
-
-    @Builder
-    public TaskTag(TaskTagPk taskTagPk, Tag tag, Task task) {
-        this.taskTagPk = taskTagPk;
-        this.tag = tag;
-        this.task = task;
-    }
 }

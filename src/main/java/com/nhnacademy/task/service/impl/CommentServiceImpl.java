@@ -1,91 +1,72 @@
-/**
- * packageName :  com.nhnacademy.task.service.impl
- * fileName : CommentServiceImpl
- * author :  ichunghui
- * date : 2023/06/06 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/06                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.service.impl;
 
-import com.nhnacademy.task.dto.CommentDto;
+import com.nhnacademy.task.dto.respond.CommentRespondDto;
 import com.nhnacademy.task.entity.Comment;
-import com.nhnacademy.task.entity.Project;
 import com.nhnacademy.task.entity.Task;
-import com.nhnacademy.task.exception.CommentNotFoundException;
-import com.nhnacademy.task.exception.ProjectNotFoundException;
 import com.nhnacademy.task.exception.TaskNotFoundException;
 import com.nhnacademy.task.repository.CommentRepository;
-import com.nhnacademy.task.repository.ProjectRepository;
 import com.nhnacademy.task.repository.TaskRepository;
 import com.nhnacademy.task.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
-@Service
 @RequiredArgsConstructor
-@Transactional
+@Service
 public class CommentServiceImpl implements CommentService {
-
-    private final ProjectRepository projectRepository;
-    private final TaskRepository taskRepository;
     private final CommentRepository commentRepository;
+    private final TaskRepository taskRepository;
 
     @Override
-    public CommentDto createComment(Long projectId, Long taskId, CommentDto commentDto) {
-        Task task = getTask(projectId, taskId);
-        Comment comment = commentDto.toEntity(task);
-        return CommentDto.fromEntity(commentRepository.save(comment));
-    }
+    public String registerComment(@RequestBody String commentContent, Long projectNum, Long taskNum,
+                                  String writerId) {
+        Optional<Task> task = taskRepository.findById(taskNum);
 
-    @Transactional(readOnly = true)
-    @Override
-    public List<CommentDto> getCommentsByTaskId(Long projectId, Long taskId) {
-        Task task = getTask(projectId, taskId);
-        return commentRepository.findByTask(task).stream()
-                .map(CommentDto::fromEntity)
-                .collect(Collectors.toList());
-    }
+        if (task.isEmpty()) {
+            return "해당 task가 존재하지 않습니다.";
+        }
+        Comment comment = Comment.builder()
+            .commentContent(commentContent)
+            .task(task.get())
+            .writerId(writerId)
+            .build();
 
-    @Transactional(readOnly = true)
-    @Override
-    public CommentDto getCommentById(Long projectId, Long taskId, Long commentId) {
-        Task task = getTask(projectId, taskId);
-        Comment comment = commentRepository.findByTaskAndCommentId(task, commentId)
-                .orElseThrow(CommentNotFoundException::new);
-        return CommentDto.fromEntity(comment);
-    }
-
-    @Override
-    public CommentDto updateComment(Long projectId, Long taskId, Long commentId, CommentDto commentDto) {
-        Task task = getTask(projectId, taskId);
-        Comment comment = commentRepository.findByTaskAndCommentId(task, commentId)
-                .orElseThrow(CommentNotFoundException::new);
-        comment.updateContent(commentDto.getContent());
         commentRepository.save(comment);
-        return CommentDto.fromEntity(comment);
+
+        return "댓글이 저장 되었습니다.";
     }
 
     @Override
-    public void deleteCommentById(Long projectId, Long taskId, Long commentId) {
-        Task task = getTask(projectId, taskId);
-        Comment comment = commentRepository.findByTaskAndCommentId(task, commentId)
-                .orElseThrow(CommentNotFoundException::new);
-        commentRepository.delete(comment);
+    public List<CommentRespondDto> getAllComment(Long projectNum, Long taskNum) {
+        Task task = taskRepository.findById(taskNum)
+            .orElseThrow(TaskNotFoundException::new);
+
+        return commentRepository.findByTask(task);
     }
 
-    private Task getTask(Long projectId, Long taskId) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(ProjectNotFoundException::new);
-        return taskRepository.findByProjectAndTaskId(project, taskId)
-                .orElseThrow(TaskNotFoundException::new);
+    @Override
+    public String updateComment(String commentContent, Long projectNum, Long taskNum,
+                                Long commentNum) {
+        Optional<Comment> comment = commentRepository.findById(commentNum);
+        if (comment.isEmpty()) {
+            return "해당 comment가 존재하지 않습니다.";
+        }
+
+        Comment updateComment = comment.get();
+        updateComment.setCommentContent(commentContent);
+
+        commentRepository.save(updateComment);
+
+        return "comment가 수정되었습니다.";
+    }
+
+    @Override
+    public String deleteComment(Long projectNum, Long taskNum, Long commentNum) {
+        commentRepository.deleteById(commentNum);
+
+        return "comment가 삭제되었습니다.";
     }
 }

@@ -1,88 +1,139 @@
-/**
- * packageName :  com.nhnacademy.task.service.impl
- * fileName : TaskServiceImpl
- * author :  ichunghui
- * date : 2023/06/11 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/11                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.service.impl;
 
-import com.nhnacademy.task.dto.TaskDto;
-import com.nhnacademy.task.entity.Project;
-import com.nhnacademy.task.entity.Task;
+import com.nhnacademy.task.dto.request.TaskRequestDto;
+import com.nhnacademy.task.dto.respond.TaskRespondDto;
+import com.nhnacademy.task.entity.*;
+import com.nhnacademy.task.entity.pk.TaskTagPk;
 import com.nhnacademy.task.exception.ProjectNotFoundException;
-import com.nhnacademy.task.exception.TaskNotFoundException;
-import com.nhnacademy.task.repository.ProjectRepository;
-import com.nhnacademy.task.repository.TaskRepository;
+import com.nhnacademy.task.repository.*;
 import com.nhnacademy.task.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
-@Service
 @RequiredArgsConstructor
-@Transactional
+@Service
 public class TaskServiceImpl implements TaskService {
-
-    private final ProjectRepository projectRepository;
     private final TaskRepository taskRepository;
+    private final ProjectRepository projectRepository;
+    private final MilestoneRepository milestoneRepository;
+    private final TagRepository tagRepository;
+    private final TaskTagRepository taskTagRepository;
 
     @Override
-    public TaskDto createTask(Long projectId, TaskDto taskDto) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(ProjectNotFoundException::new);
-        Task task = taskDto.toEntity(project);
-        return TaskDto.fromEntity(taskRepository.save(task));
-    }
+    public String createTask(TaskRequestDto taskRequestDto,
+                             Long projectNum) {
+        Optional<Project> project = projectRepository.findById(projectNum);
+        if (project.isEmpty()) {
+            return "해당 프로젝트가 존재하지 않습니다.";
+        }
 
-    @Transactional(readOnly = true)
-    @Override
-    public List<TaskDto> getTasksByProjectId(Long projectId) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(ProjectNotFoundException::new);
-        return taskRepository.findByProject(project).stream()
-                .map(TaskDto::fromEntity)
-                .collect(Collectors.toList());
-    }
+        Task task = Task.builder()
+            .project(project.get())
+            .taskTitle(taskRequestDto.getTaskTitle())
+            .taskContent(taskRequestDto.getTaskContent())
+            .build();
 
-    @Transactional(readOnly = true)
-    @Override
-    public TaskDto getTaskById(Long projectId, Long taskId) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(ProjectNotFoundException::new);
-        Task task = taskRepository.findByProjectAndTaskId(project, taskId)
-                .orElseThrow(TaskNotFoundException::new);
-        return TaskDto.fromEntity(task);
-    }
-
-    @Override
-    public TaskDto updateTask(Long projectId, Long taskId, TaskDto taskDto) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(ProjectNotFoundException::new);
-        Task task = taskRepository.findByProjectAndTaskId(project, taskId)
-                .orElseThrow(TaskNotFoundException::new);
-        task.update(taskDto.getTaskTitle(), taskDto.getTaskContent());
         taskRepository.save(task);
-        return TaskDto.fromEntity(task);
+
+        return "태스크가 저장되었습니다.";
     }
 
+    @Override
+    public Optional<TaskRespondDto> findTaskDetail(Long projectNum, Long taskNum) {
+        Project project = projectRepository.findById(projectNum)
+            .orElseThrow(ProjectNotFoundException::new);
+//        if (project.isEmpty()) {
+//            return TaskRespondDto.builder().build();
+//        }
+        TaskRespondDto taskRespondDto =
+            taskRepository.findByProjectAndTaskNum(project, taskNum);
+
+        return Optional.ofNullable(taskRespondDto);
+    }
 
     @Override
-    public void deleteTaskById(Long projectId, Long taskId) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(ProjectNotFoundException::new);
-        Task task = taskRepository.findByProjectAndTaskId(project, taskId)
-                .orElseThrow(TaskNotFoundException::new);
-        taskRepository.delete(task);
+    public List<TaskRespondDto> findTaskAll(Long projectNum) {
+        Project project = projectRepository.findById(projectNum)
+            .orElseThrow(ProjectNotFoundException::new);
+        return taskRepository.findByProject(project);
+    }
+
+    @Override
+    public String updateTask(TaskRequestDto taskRequestDto, Long projectNum, Long taskNum) {
+        Optional<Task> task = taskRepository.findById(taskNum);
+        if (task.isEmpty()) {
+            return "해당 task가 존재하지 않습니다.";
+        }
+
+        Task updateTask = task.get();
+
+        updateTask.setTaskTitle(taskRequestDto.getTaskTitle());
+        updateTask.setTaskContent(taskRequestDto.getTaskContent());
+
+        taskRepository.save(updateTask);
+
+        return "task가 수정되었습니다.";
+    }
+
+    @Override
+    public String deleteTask(Long projectNum, Long taskNum) {
+        taskRepository.deleteById(taskNum);
+
+        return "task가 삭제되었습니다.";
+    }
+
+    @Override
+    public String registerMilestone(Long projectNum, Long taskNum, Long milestoneNum) {
+        Optional<Task> task = taskRepository.findById(taskNum);
+
+        if (task.isEmpty()) {
+            return "해당 task가 존재하지 않습니다";
+        }
+
+        Task updateTask = task.get();
+
+        Optional<Milestone> milestone = milestoneRepository.findById(milestoneNum);
+
+        if (milestone.isEmpty()) {
+            return "해당 마일스톤이 존재하지 않습니다";
+        }
+
+        updateTask.setMilestone(milestone.get());
+
+        taskRepository.save(updateTask);
+
+        return "해당 task에 마일스톤을 등록하였습니다.";
+    }
+
+    @Override
+    public String registerTag(Long projectNum, Long taskNum, Long tagNum) {
+        Optional<Task> task = taskRepository.findById(taskNum);
+
+        if (task.isEmpty()) {
+            return "해당 task가 존재하지 않습니다";
+        }
+
+        Optional<Tag> tag = tagRepository.findById(tagNum);
+        if (tag.isEmpty()) {
+            return "해당 tag가 프로젝트 내에 존재하지 않습니다";
+        }
+
+        TaskTagPk taskTagPk = TaskTagPk.builder()
+            .taskNum(taskNum)
+            .tagNum(tagNum)
+            .build();
+
+        TaskTag taskTag = TaskTag.builder()
+            .taskTagPk(taskTagPk)
+            .task(task.get())
+            .tag(tag.get())
+            .build();
+
+        taskTagRepository.save(taskTag);
+
+        return "task의 tag가 등록되었습니다";
     }
 }
-
-

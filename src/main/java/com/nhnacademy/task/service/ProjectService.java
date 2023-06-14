@@ -1,17 +1,15 @@
 package com.nhnacademy.task.service;
 
-import com.nhnacademy.task.dto.ProjectDto;
+import com.nhnacademy.task.dto.request.ProjectRequestDto;
+import com.nhnacademy.task.dto.respond.ProjectRespondDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProjectService {
-    ProjectDto createProject(ProjectDto projectDto);
+    List<ProjectRespondDto> getProjects(int page);
 
-    List<ProjectDto> getAccessibleProjects();
+    Optional<ProjectRespondDto> createProject(ProjectRequestDto projectRequestDto, Long memberNum);
 
-    ProjectDto getProjectById(Long projectId);
-
-    void deleteProjectById(Long projectId);
-
-    ProjectDto updateProject(Long projectId, ProjectDto projectDto);
+    Optional<ProjectRespondDto> getProjectByProjectNum(Long projectNum);
 }

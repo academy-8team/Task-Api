@@ -1,44 +1,30 @@
-/**
- * packageName :  com.nhnacademy.task.entity
- * fileName : ProjectMember
- * author :  ichunghui
- * date : 2023/06/06 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/06                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.entity;
 
+
+import com.nhnacademy.task.entity.enums.ProjectRole;
 import com.nhnacademy.task.entity.pk.ProjectMemberPk;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import lombok.*;
-
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter// todo 4 : Project Entity에  Builder를 테이블 전체에 사용하지 않도록 한다. 또한 네이밍 규칙을 고려하여 고친다. 필요하다면 update 메서드를 추가한다.
 @Entity
-@Table(name = "project_members")
-public class ProjectMember extends BaseTimeEntity {
-
+public class ProjectMember {
     @EmbeddedId
     private ProjectMemberPk projectMemberPk;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "project_role")
     private ProjectRole projectRole;
 
-    @MapsId("projectId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
+    @MapsId("projectNum")
+    @ManyToOne
+    @JoinColumn(name = "project_num")
     private Project project;
-
-    @Builder
-    public ProjectMember(ProjectMemberPk projectMemberPk, ProjectRole projectRole, Project project) {
-        this.projectMemberPk = projectMemberPk;
-        this.projectRole = projectRole;
-        this.project = project;
-    }
 }

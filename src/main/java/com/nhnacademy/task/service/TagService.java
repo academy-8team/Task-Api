@@ -1,31 +1,17 @@
-/**
- * packageName :  com.nhnacademy.task.service
- * fileName : TagService
- * author :  ichunghui
- * date : 2023/06/11 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/11                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.service;
 
-import com.nhnacademy.task.dto.TagDto;
+import com.nhnacademy.task.dto.respond.TagRespondDto;
 
 import java.util.List;
 
 public interface TagService {
+    String createTag(Long projectNum, String tagTitle);
 
-    TagDto createTag(Long projectId, TagDto tagDto);
+    List<TagRespondDto> findAllTag(Long projectNum);
 
-    List<TagDto> getTagsByProjectId(Long projectId);
+    String updateTag(Long projectNum, Long tagNum, String tagTitle);
 
-    TagDto getTagById(Long projectId, Long tagId);
+    String deleteTag(Long projectNum, Long tagNum);
 
-    void deleteTagById(Long projectId, Long tagId);
-
-    TagDto updateTag(Long projectId, Long tagId, TagDto tagDto);
+    List<TagRespondDto> getTagByProjectNum(Long projectNum, Long taskNum);
 }
-

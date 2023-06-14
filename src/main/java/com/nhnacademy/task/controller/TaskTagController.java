@@ -12,52 +12,26 @@
 
 package com.nhnacademy.task.controller;
 
-import com.nhnacademy.task.dto.TaskTagDto;
 import com.nhnacademy.task.service.TaskTagService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-
-@RestController
-@RequestMapping("/projects/{projectId}/tasks/{taskId}/tags")
 @RequiredArgsConstructor
+@RestController // todo 13 - restful하게 api를 수정하고, 네이밍 규칙을 지킵니다. 또한, ResponseEntity와 @Valid, BindingResult를 사용합니다.
 public class TaskTagController {
-
     private final TaskTagService taskTagService;
 
-    @PostMapping("/{tagId}")
-    public ResponseEntity<?> addTagToTask(@PathVariable Long projectId, @PathVariable Long taskId, @PathVariable Long tagId, @Valid @RequestBody TaskTagDto taskTagDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-        }
-        try {
-            return new ResponseEntity<>(taskTagService.addTagToTask(projectId, taskId, tagId, taskTagDto), HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/project/{projectNum}/task/{taskNum}/taskTag")
+    public List<String> getTaskTag(@PathVariable(value = "projectNum") Long projectNum,
+                                   @PathVariable(value = "taskNum") Long taskNum) {
+        return taskTagService.getTaskTag(projectNum, taskNum);
     }
 
-    @GetMapping
-    public ResponseEntity<List<TaskTagDto>> getTagsForTask(@PathVariable Long projectId, @PathVariable Long taskId) {
-        try {
-            return ResponseEntity.ok(taskTagService.getTagsForTask(projectId, taskId));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{tagId}")
-    public ResponseEntity<?> removeTagFromTask(@PathVariable Long projectId, @PathVariable Long taskId, @PathVariable Long tagId) {
-        try {
-            taskTagService.removeTagFromTask(projectId, taskId, tagId);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/project/{projectNum}/task/{taskNum}/tag/{tagNum}/taskTag/register")
+    public String registerTaskTag(@PathVariable(value = "projectNum") Long projectNum,
+                                  @PathVariable(value = "taskNum") Long taskNum,
+                                  @PathVariable(value = "tagNum") Long tagNum) {
+        return taskTagService.registerTaskTag(projectNum, taskNum, tagNum);
     }
 }

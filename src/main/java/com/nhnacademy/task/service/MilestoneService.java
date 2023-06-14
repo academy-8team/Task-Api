@@ -1,30 +1,19 @@
-/**
- * packageName :  com.nhnacademy.task.service
- * fileName : MilestoneService
- * author :  ichunghui
- * date : 2023/06/06 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/06                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.service;
 
-import com.nhnacademy.task.dto.MilestoneDto;
+import com.nhnacademy.task.dto.respond.MilestoneRespondDto;
 
 import java.util.List;
 
 public interface MilestoneService {
+    String createMilestone(Long projectNum, String milestoneTitle);
 
-    MilestoneDto createMilestone(Long projectId, MilestoneDto milestoneDto);
+    List<MilestoneRespondDto> findAllMilestone(Long projectNum);
 
-    List<MilestoneDto> getMilestonesByProjectId(Long projectId);
+    String updateTag(Long projectNum, Long milestoneNum, String milestoneTitle);
 
-    MilestoneDto getMilestoneById(Long projectId, Long milestoneId);
+    String deleteTag(Long projectNum, Long milestoneNum);
 
-    MilestoneDto updateMilestone(Long projectId, Long milestoneId, MilestoneDto milestoneDto);
+    List<MilestoneRespondDto> getMilestoneByProjectNum(Long projectNum, Long taskNum);
 
-    void deleteMilestoneById(Long projectId, Long milestoneId);
+    String getMilestoneByTaskNum(Long projectNum, Long taskNum);
 }
