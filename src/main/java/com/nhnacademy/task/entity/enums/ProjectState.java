@@ -1,6 +1,6 @@
-package com.nhnacademy.task.entity;
+package com.nhnacademy.task.entity.enums;
 
-public enum ProjectStatus {
+public enum ProjectState {
     ACTIVE {
         @Override
         public String toString() {

@@ -1,32 +1,21 @@
-/**
- * packageName :  com.nhnacademy.task.entity.pk
- * fileName : ProjectMemberPk
- * author :  ichunghui
- * date : 2023/06/06 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/06                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.entity.pk;
 
-import java.io.Serializable;
+import lombok.*;
+
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 @Getter
 @Embeddable
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode
 public class ProjectMemberPk implements Serializable {
-    private Long projectMemberId;
-    private Long projectId;
+    @Column(name = "project_member_num")
+    private Long projectMemberNum;
 
+    @Column(name = "project_num")
+    private Long projectNum;
 }

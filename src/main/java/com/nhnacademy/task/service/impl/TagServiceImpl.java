@@ -1,77 +1,78 @@
-/**
- * packageName :  com.nhnacademy.task.service.impl
- * fileName : TagServiceImpl
- * author :  ichunghui
- * date : 2023/06/11 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/11                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.service.impl;
 
-import com.nhnacademy.task.dto.TagDto;
+import com.nhnacademy.task.dto.respond.TagRespondDto;
 import com.nhnacademy.task.entity.Project;
 import com.nhnacademy.task.entity.Tag;
 import com.nhnacademy.task.exception.ProjectNotFoundException;
-import com.nhnacademy.task.exception.TagNotFoundException;
 import com.nhnacademy.task.repository.ProjectRepository;
 import com.nhnacademy.task.repository.TagRepository;
+import com.nhnacademy.task.repository.TaskRepository;
 import com.nhnacademy.task.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
-@Service
 @RequiredArgsConstructor
-@Transactional
+@Service
 public class TagServiceImpl implements TagService {
-
     private final TagRepository tagRepository;
+    private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
 
     @Override
-    public TagDto createTag(Long projectId, TagDto tagDto) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(ProjectNotFoundException::new);
-        Tag tag = tagDto.toEntity(project);
-        return TagDto.fromEntity(tagRepository.save(tag));
-    }
+    public String createTag(Long projectNum, String tagTitle) {
+        Optional<Project> project = projectRepository.findById(projectNum);
 
-    @Transactional(readOnly = true)
-    @Override
-    public List<TagDto> getTagsByProjectId(Long projectId) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(ProjectNotFoundException::new);
-        return tagRepository.findByProject(project).stream()
-                .map(TagDto::fromEntity)
-                .collect(Collectors.toList());
-    }
+        if (project.isEmpty()) {
+            return "해당 프로젝트가 존재하지 않습니다.";
+        }
 
-    @Transactional(readOnly = true)
-    @Override
-    public TagDto getTagById(Long projectId, Long tagId) {
-        Tag tag = tagRepository.findByProjectIdAndTagId(projectId, tagId)
-                .orElseThrow(TagNotFoundException::new);
-        return TagDto.fromEntity(tag);
-    }
-    @Override
-    public void deleteTagById(Long projectId, Long tagId) {
-        Tag tag = tagRepository.findByProjectIdAndTagId(projectId, tagId)
-                .orElseThrow(TagNotFoundException::new);
-        tagRepository.delete(tag);
+        Tag tag = Tag.builder()
+            .tagTitle(tagTitle)
+            .project(project.get())
+            .build();
+
+        tagRepository.save(tag);
+
+        return "tag가 저장되었습니다.";
     }
 
     @Override
-    public TagDto updateTag(Long projectId, Long tagId, TagDto tagDto) {
-        Tag tag = tagRepository.findByProjectIdAndTagId(projectId, tagId)
-                .orElseThrow(TagNotFoundException::new);
-        tag.update(tagDto.getTagTitle());
-        return TagDto.fromEntity(tagRepository.save(tag));
+    public List<TagRespondDto> findAllTag(Long projectNum) {
+        Project project = projectRepository.findById(projectNum)
+            .orElseThrow(ProjectNotFoundException::new);
+        return tagRepository.findByProject(project);
+    }
+
+    @Override
+    public String updateTag(Long projectNum, Long tagNum, String tagTitle) {
+        Optional<Tag> tag = tagRepository.findById(tagNum);
+
+        if (tag.isEmpty()) {
+            return "해당 tag가 존재하지 않습니다.";
+        }
+
+        Tag updateTag = tag.get();
+        updateTag.setTagTitle(tagTitle);
+
+        tagRepository.save(updateTag);
+
+        return "해당 태그가 수정되었습니다.";
+    }
+
+    @Override
+    public String deleteTag(Long projectNum, Long tagNum) {
+        tagRepository.deleteById(tagNum);
+
+        return "해당 태그가 삭제되었습니다.";
+    }
+
+    @Override
+    public List<TagRespondDto> getTagByProjectNum(Long projectNum, Long taskNum) {
+        Project project = projectRepository.findById(projectNum)
+            .orElseThrow(ProjectNotFoundException::new);
+        return tagRepository.findByProject(project);
     }
 }

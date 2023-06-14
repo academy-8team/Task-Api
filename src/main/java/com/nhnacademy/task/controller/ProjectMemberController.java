@@ -12,46 +12,31 @@
 
 package com.nhnacademy.task.controller;
 
-import com.nhnacademy.task.dto.ProjectMemberDto;
+import com.nhnacademy.task.dto.respond.ProjectMemberRespondDto;
 import com.nhnacademy.task.service.ProjectMemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
-@RestController
-@RequestMapping("/projects/{projectId}/members")
 @RequiredArgsConstructor
+@RestController // todo 10 - restful하게 api를 수정하고, 네이밍 규칙을 지킵니다. 또한, ResponseEntity와 @Valid, BindingResult를 사용합니다. Pageable 인터페이스를 고려합니다.
 public class ProjectMemberController {
-
     private final ProjectMemberService projectMemberService;
 
-    @PostMapping
-    public ResponseEntity<?> createProjectMember(@PathVariable Long projectId, @Valid @RequestBody ProjectMemberDto projectMemberDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(projectMemberService.createProjectMember(projectId, projectMemberDto), HttpStatus.CREATED);
+    @GetMapping("/project/member/{memberNum}")
+    public List<ProjectMemberRespondDto> getProjectList(@PathVariable(name = "memberNum") Long memberNum, @RequestParam(name = "page") int page) {
+        return projectMemberService.getProjects(memberNum, page);
     }
 
-    @GetMapping
-    public ResponseEntity<List<ProjectMemberDto>> getProjectMembers(@PathVariable Long projectId) {
-        return new ResponseEntity<>(projectMemberService.getProjectMembers(projectId), HttpStatus.OK);
+    @GetMapping("/project/{projectNum}/member/administrator")
+    public Optional<ProjectMemberRespondDto> getProjectAdministrator(@PathVariable(name = "projectNum") Long projectNum) {
+        return projectMemberService.getProjectAdministratorByProjectNum(projectNum);
     }
 
-    @GetMapping("/{memberId}")
-    public ResponseEntity<ProjectMemberDto> getProjectMember(@PathVariable Long projectId, @PathVariable Long memberId) {
-        return new ResponseEntity<>(projectMemberService.getProjectMemberById(projectId, memberId), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{memberId}")
-    public ResponseEntity<Void> deleteProjectMember(@PathVariable Long projectId, @PathVariable Long memberId) {
-        projectMemberService.deleteProjectMemberById(projectId, memberId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @GetMapping("/project/{projectNum}/member/register")
+    public String registerProjectMember(@PathVariable(name = "projectNum") Long projectNum, @RequestParam(name = "memberNum") Long memberNum) {
+        return projectMemberService.registerProjectMember(projectNum, memberNum);
     }
 }
-

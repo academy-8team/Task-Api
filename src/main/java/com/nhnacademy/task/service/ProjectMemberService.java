@@ -1,28 +1,15 @@
-/**
- * packageName :  com.nhnacademy.task.service
- * fileName : ProjectMemberService
- * author :  ichunghui
- * date : 2023/06/06
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/06                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.service;
 
-import com.nhnacademy.task.dto.ProjectMemberDto;
+import com.nhnacademy.task.dto.respond.ProjectMemberRespondDto;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface ProjectMemberService {
+public interface ProjectMemberService { // todo 15 - pageable interface를 이용할 것을 고려합니다.
+    List<ProjectMemberRespondDto> getProjects(Long memberNum, int page);
 
-    ProjectMemberDto createProjectMember(Long projectId, ProjectMemberDto projectMemberDto);
+    Optional<ProjectMemberRespondDto> getProjectAdministratorByProjectNum(Long projectNum);
 
-    List<ProjectMemberDto> getProjectMembers(Long projectId);
-
-    ProjectMemberDto getProjectMemberById(Long projectId, Long projectMemberNum);
-
-    void deleteProjectMemberById(Long projectId, Long projectMemberNum);
+    String registerProjectMember(Long projectNum, Long memberNum);
 }

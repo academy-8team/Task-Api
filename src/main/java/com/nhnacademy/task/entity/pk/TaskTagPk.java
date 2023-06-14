@@ -1,31 +1,21 @@
-/**
- * packageName :  com.nhnacademy.task.entity.pk
- * fileName : TaskTagPk
- * author :  ichunghui
- * date : 2023/06/06 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/06                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.entity.pk;
 
-import java.io.Serializable;
+import lombok.*;
+
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-@Getter
-@Embeddable
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@Getter
+@Embeddable
 public class TaskTagPk implements Serializable {
-    private Long tagId;
-    private Long taskId;
+    @Column(name = "tag_num")
+    private Long tagNum;
+
+    @Column(name = "task_num")
+    private Long taskNum;
 }

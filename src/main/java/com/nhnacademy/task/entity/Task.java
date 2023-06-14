@@ -1,68 +1,38 @@
-/**
- * packageName :  com.nhnacademy.task.entity
- * fileName : Task
- * author :  ichunghui
- * date : 2023/06/06 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/06                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.*;
-
 import lombok.*;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
-@Table(name = "tasks")
-public class Task extends BaseTimeEntity {
+import javax.persistence.*;
+import java.util.List;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Entity // todo6 - Task Entity에 Setter를 제거하고, Builder를 테이블 전체에 사용하지 않도록 한다. 필요하다면 update 메서드를 추가한다.
+public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "task_id")
-    private Long taskId;
+    @Column(name = "task_num")
+    private Long taskNum;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_Id")
+    @ManyToOne
+    @JoinColumn(name = "project_num")
     private Project project;
+
+    @OneToOne
+    @JoinColumn(name = "milestone_num")
+    private Milestone milestone;
 
     @Column(name = "task_title")
     private String taskTitle;
 
-
     @Column(name = "task_content")
     private String taskContent;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "milestone_id")
-    private Milestone milestone;
-
-    @OneToMany(mappedBy = "task")
+    @OneToMany(mappedBy = "task", cascade = CascadeType.REMOVE)
     @JsonIgnore
-    private List<Comment> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "task")
-    @JsonIgnore
-    private List<TaskTag> taskTags = new ArrayList<>();
-
-    @Builder
-    public Task(Project project, String taskTitle, String taskContent) {
-        this.project = project;
-        this.taskTitle = taskTitle;
-        this.taskContent = taskContent;
-    }
-
-    public void update(String taskTitle, String taskContent) {
-        this.taskTitle = taskTitle;
-        this.taskContent = taskContent;
-    }
+    private List<Comment> comments;
 }

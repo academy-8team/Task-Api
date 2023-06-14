@@ -1,84 +1,94 @@
-/**
- * packageName :  com.nhnacademy.task.service.impl
- * fileName : MilestoneServiceImpl
- * author :  ichunghui
- * date : 2023/06/06 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/06                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.service.impl;
 
-import com.nhnacademy.task.dto.MilestoneDto;
+import com.nhnacademy.task.dto.respond.MilestoneRespondDto;
 import com.nhnacademy.task.entity.Milestone;
 import com.nhnacademy.task.entity.Project;
-import com.nhnacademy.task.exception.MilestoneNotFoundException;
 import com.nhnacademy.task.exception.ProjectNotFoundException;
 import com.nhnacademy.task.repository.MilestoneRepository;
 import com.nhnacademy.task.repository.ProjectRepository;
+import com.nhnacademy.task.repository.TaskRepository;
 import com.nhnacademy.task.service.MilestoneService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
-@Service
 @RequiredArgsConstructor
-@Transactional
+@Service
 public class MilestoneServiceImpl implements MilestoneService {
-
-    private final ProjectRepository projectRepository;
     private final MilestoneRepository milestoneRepository;
+    private final ProjectRepository projectRepository;
+    private final TaskRepository taskRepository;
 
     @Override
-    public MilestoneDto createMilestone(Long projectId, MilestoneDto milestoneDto) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(ProjectNotFoundException::new);
-        Milestone milestone = milestoneDto.toEntity(project);
-        return MilestoneDto.fromEntity(milestoneRepository.save(milestone));
-    }
+    public String createMilestone(Long projectNum, String milestoneTitle) {
+        Optional<Project> project = projectRepository.findById(projectNum);
 
-    @Transactional(readOnly = true)
-    @Override
-    public List<MilestoneDto> getMilestonesByProjectId(Long projectId) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(ProjectNotFoundException::new);
-        return milestoneRepository.findByProject(project).stream()
-                .map(MilestoneDto::fromEntity)
-                .collect(Collectors.toList());
-    }
+        if (project.isEmpty()) {
+            return "해당 프로젝트가 존재하지 않습니다.";
+        }
+        Milestone milestone = Milestone.builder()
+            .milestoneTitle(milestoneTitle)
+            .project(project.get())
+            .build();
 
-    @Transactional(readOnly = true)
-    @Override
-    public MilestoneDto getMilestoneById(Long projectId, Long milestoneId) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(ProjectNotFoundException::new);
-        Milestone milestone = milestoneRepository.findByProjectAndMilestoneId(project, milestoneId)
-                .orElseThrow(MilestoneNotFoundException::new);
-        return MilestoneDto.fromEntity(milestone);
+        milestoneRepository.save(milestone);
+
+        return "마일스톤이 저장되었습니다.";
     }
 
     @Override
-    public MilestoneDto updateMilestone(Long projectId, Long milestoneId, MilestoneDto milestoneDto) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(ProjectNotFoundException::new);
-        Milestone milestone = milestoneRepository.findByProjectAndMilestoneId(project, milestoneId)
-                .orElseThrow(MilestoneNotFoundException::new);
-        milestone.updateMilestoneTitle(milestoneDto.getMilestoneTitle());
-        return MilestoneDto.fromEntity(milestoneRepository.save(milestone));
+    public List<MilestoneRespondDto> findAllMilestone(Long projectNum) {
+        Project project = projectRepository.findById(projectNum)
+            .orElseThrow(ProjectNotFoundException::new);
+        return milestoneRepository.findByProject(project);
     }
 
     @Override
-    public void deleteMilestoneById(Long projectId, Long milestoneId) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(ProjectNotFoundException::new);
-        Milestone milestone = milestoneRepository.findByProjectAndMilestoneId(project, milestoneId)
-                .orElseThrow(MilestoneNotFoundException::new);
-        milestoneRepository.delete(milestone);
+    public String updateTag(Long projectNum, Long milestoneNum, String milestoneTitle) {
+        Optional<Milestone> milestone = milestoneRepository.findById(milestoneNum);
+
+        if (milestone.isEmpty()) {
+            return "해당 마일스톤이 존재하지 않습니다.";
+        }
+
+        Milestone updateMilestone = milestone.get();
+
+
+
+        updateMilestone.setMilestoneTitle(milestoneTitle);
+
+        milestoneRepository.save(updateMilestone);
+
+        return "해당 마일스톤이 수정되었습니다.";
+    }
+
+    @Override
+    public String deleteTag(Long projectNum, Long milestoneNum) {
+        milestoneRepository.deleteById(milestoneNum);
+
+        return "해당 마일스톤이 삭제되었습니다";
+    }
+
+    @Override
+    public List<MilestoneRespondDto> getMilestoneByProjectNum(Long projectNum, Long taskNum) {
+        Project project = projectRepository.findById(projectNum)
+            .orElseThrow(ProjectNotFoundException::new);
+        return milestoneRepository.findByProject(project);
+    }
+
+    @Override
+    public String getMilestoneByTaskNum(Long projectNum, Long taskNum) {
+        Project project = projectRepository.findById(projectNum)
+            .orElseThrow(ProjectNotFoundException::new);
+
+        if (taskRepository.findByProjectAndTaskNum(project, taskNum).getMilestone() == null) {
+            return null;
+        }
+
+        return taskRepository.findByProjectAndTaskNum(project, taskNum).getMilestone()
+            .getMilestoneTitle();
+
     }
 }

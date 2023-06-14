@@ -1,31 +1,16 @@
-/**
- * packageName :  com.nhnacademy.task.repository
- * fileName : ProjectMemberRepository
- * author :  ichunghui
- * date : 2023/06/06 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/06                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.repository;
 
-import com.nhnacademy.task.entity.Project;
+import com.nhnacademy.task.dto.respond.ProjectMemberRespondDto;
 import com.nhnacademy.task.entity.ProjectMember;
+import com.nhnacademy.task.entity.enums.ProjectRole;
 import com.nhnacademy.task.entity.pk.ProjectMemberPk;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
-
-@Repository
 public interface ProjectMemberRepository extends JpaRepository<ProjectMember, ProjectMemberPk> {
-    List<ProjectMember> findByProject(Project project);
+    Page<ProjectMemberRespondDto> findByProjectMemberPkProjectMemberNum(Long memberNum, Pageable pageable);
 
-    @Query("SELECT pm FROM ProjectMember pm WHERE pm.project = :project AND pm.projectMemberPk.projectMemberId = :projectMemberId")
-    Optional<ProjectMember> findByProjectAndProjectMemberId(Project project, Long projectMemberId);
+    ProjectMemberRespondDto findByProjectMemberPkProjectNumAndProjectRole(Long projectMemberPk_projectNum, ProjectRole projectRole);
+
 }

@@ -1,69 +1,49 @@
 package com.nhnacademy.task.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import com.nhnacademy.task.entity.enums.ProjectState;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "projects")
-public class Project extends BaseTimeEntity{
+@Entity // todo 3 : Project  Builder를 테이블 전체에 사용하지 않도록 한다. 또한 네이밍 규칙을 고려하여 고친다. 필요하다면 update 메서드를 추가한다.
+public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "project_id")
-    private Long projectId;
+    @Column(name = "project_num")
+    private Long projectNum;
 
-    @NotNull
-    @Size(min=2, max=30)
     @Column(name = "project_name")
     private String projectName;
 
-    @Size(max=200)
     @Column(name = "project_description")
     private String projectDescription;
 
     @Enumerated(EnumType.STRING)
-    private ProjectStatus projectStatus;
+    @Column(name = "project_state")
+    private ProjectState projectState;
 
     @OneToMany(mappedBy = "project")
     @JsonIgnore
-    private List<Task> tasks = new ArrayList<>();
+    private List<Task> tasks;
 
     @OneToMany(mappedBy = "project")
     @JsonIgnore
-    private List<ProjectMember> projectMembers = new ArrayList<>();
+    private List<ProjectMember> projectMembers;
 
     @OneToMany(mappedBy = "project")
     @JsonIgnore
-    private List<Tag> tags = new ArrayList<>();
+    private List<Tag> tags;
 
     @OneToMany(mappedBy = "project")
     @JsonIgnore
-    private List<Milestone> milestones = new ArrayList<>();
-
-    @Builder
-    public Project(String projectName, String projectDescription, ProjectStatus projectStatus) {
-        this.projectName = projectName;
-        this.projectDescription = projectDescription;
-        this.projectStatus = projectStatus;
-    }
-
-    public void updateAttributes(String projectName, String projectDescription, ProjectStatus projectStatus) {
-        Project updatedProject = Project.builder()
-                .projectName(projectName)
-                .projectDescription(projectDescription)
-                .projectStatus(projectStatus)
-                .build();
-
-        this.projectName = updatedProject.projectName;
-        this.projectDescription = updatedProject.projectDescription;
-        this.projectStatus = updatedProject.projectStatus;
-    }
-
+    private List<Milestone> milestones;
 }
