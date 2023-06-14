@@ -1,84 +1,96 @@
-/**
- * packageName :  com.nhnacademy.project.controller
- * fileName : TaskController
- * author :  ichunghui
- * date : 2023/06/02 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/02                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.controller;
 
 import com.nhnacademy.task.dto.request.TaskRequestDto;
-
-import com.nhnacademy.task.dto.response.TaskResponseDto;
+import com.nhnacademy.task.dto.respond.TaskRespondDto;
 import com.nhnacademy.task.service.TaskService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/project/{projectNum}/task")
 public class TaskController {
+
     private final TaskService taskService;
 
-    @PostMapping("/project/{projectNum}/task/create/{memberNum}")
-    public ResponseEntity<String> createTask(@RequestBody TaskRequestDto taskRequestDto,
+    @PostMapping("/create/{memberNum}")
+    public ResponseEntity<String> createTask(@Valid @RequestBody TaskRequestDto taskRequestDto,
+                                             BindingResult bindingResult,
                                              @PathVariable(value = "projectNum") Long projectNum,
                                              @PathVariable(value = "memberNum") Long memberNum) {
 
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body("Validation failed");
+        }
+
         String result = taskService.createTask(taskRequestDto, projectNum);
-        return ResponseEntity.ok().body(result);
+        return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/project/{projectNum}/task/{taskNum}")
-    public ResponseEntity<Optional<TaskResponseDto>> getTaskDetail(
-            @PathVariable(value = "projectNum") Long projectNum,
-            @PathVariable(value = "taskNum") Long taskNum) {
-        Optional<TaskResponseDto> task = taskService.findTaskDetail(projectNum, taskNum);
-        return ResponseEntity.ok().body(task);
+    @GetMapping("/{taskNum}")
+    public ResponseEntity<TaskRespondDto> getTaskDetail(@PathVariable(value = "projectNum") Long projectNum,
+                                                        @PathVariable(value = "taskNum") Long taskNum) {
+        try {
+            Optional<TaskRespondDto> task = taskService.findTaskDetail(projectNum, taskNum);
+            return task.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        } catch (RuntimeException e) {
+            // log exception
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
-    @GetMapping("/project/{projectNum}/task")
-    public ResponseEntity<List<TaskResponseDto>> getTaskAll(@PathVariable(value = "projectNum") Long projectNum) {
-        List<TaskResponseDto> tasks = taskService.findTaskAll(projectNum);
-        return ResponseEntity.ok().body(tasks);
+
+    @GetMapping
+    public ResponseEntity<List<TaskRespondDto>> getTaskAll(@PathVariable(value = "projectNum") Long projectNum) {
+
+        List<TaskRespondDto> tasks = taskService.findTaskAll(projectNum);
+        return ResponseEntity.ok(tasks);
     }
 
-    @PutMapping("/project/{projectNum}/task/{taskNum}/update")
-    public ResponseEntity<String> updateTask(@RequestBody TaskRequestDto taskRequestDto,
+    @PostMapping("/{taskNum}/update")
+    public ResponseEntity<String> updateTask(@Valid @RequestBody TaskRequestDto taskRequestDto,
+                                             BindingResult bindingResult,
                                              @PathVariable(value = "projectNum") Long projectNum,
                                              @PathVariable(value = "taskNum") Long taskNum) {
+
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body("Task 수정 Validation이 실패했습니다.");
+        }
+
         String result = taskService.updateTask(taskRequestDto, projectNum, taskNum);
-        return ResponseEntity.ok().body(result);
+        return ResponseEntity.ok(result);
     }
 
-    @DeleteMapping("/project/{projectNum}/task/{taskNum}/delete")
+    @GetMapping("/{taskNum}/delete")
     public ResponseEntity<String> deleteTask(@PathVariable(value = "projectNum") Long projectNum,
                                              @PathVariable(value = "taskNum") Long taskNum) {
+
         String result = taskService.deleteTask(projectNum, taskNum);
-        return ResponseEntity.ok().body(result);
+        return ResponseEntity.ok(result);
     }
 
-    @PutMapping("/project/{projectNum}/task/{taskNum}/milestone/{milestoneNum}/register")
+    @GetMapping("/{taskNum}/milestone/{milestoneNum}/register")
     public ResponseEntity<String> registerMilestone(@PathVariable(value = "projectNum") Long projectNum,
                                                     @PathVariable(value = "taskNum") Long taskNum,
                                                     @PathVariable(value = "milestoneNum") Long milestoneNum) {
+
         String result = taskService.registerMilestone(projectNum, taskNum, milestoneNum);
-        return ResponseEntity.ok().body(result);
+        return ResponseEntity.ok(result);
     }
 
-    @PutMapping("/project/{projectNum}/task/{taskNum}/tag/{tagNum}/tastTag/register")
+    @GetMapping("/{taskNum}/tag/{tagNum}/taskTag/register")
     public ResponseEntity<String> registerTag(@PathVariable(value = "projectNum") Long projectNum,
                                               @PathVariable(value = "taskNum") Long taskNum,
                                               @PathVariable(value = "tagNum") Long tagNum) {
+
         String result = taskService.registerTag(projectNum, taskNum, tagNum);
-        return ResponseEntity.ok().body(result);
+        return ResponseEntity.ok(result);
     }
 }

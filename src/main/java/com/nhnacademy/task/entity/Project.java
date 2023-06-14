@@ -1,7 +1,11 @@
 package com.nhnacademy.task.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import com.nhnacademy.task.entity.enums.ProjectState;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Entity
-public class Project extends BaseTimeEntity{
+public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long projectNum;
@@ -21,7 +25,7 @@ public class Project extends BaseTimeEntity{
     private String projectDescription;
 
     @Enumerated(EnumType.STRING)
-    private ProjectStatus projectStatus;
+    private ProjectState projectState;
 
     @OneToMany(mappedBy = "project")
     @JsonIgnore

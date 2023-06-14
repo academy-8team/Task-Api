@@ -1,28 +1,17 @@
-/**
- * packageName :  com.nhnacademy.task.service.impl
- * fileName : CommentServiceImpl
- * author :  ichunghui
- * date : 2023/06/06 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/06                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.service.impl;
 
-import com.nhnacademy.task.dto.response.CommentResponseDto;
+import com.nhnacademy.task.dto.respond.CommentRespondDto;
 import com.nhnacademy.task.entity.Comment;
 import com.nhnacademy.task.entity.Task;
 import com.nhnacademy.task.repository.CommentRepository;
 import com.nhnacademy.task.repository.TaskRepository;
 import com.nhnacademy.task.service.CommentService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -31,17 +20,18 @@ public class CommentServiceImpl implements CommentService {
     private final TaskRepository taskRepository;
 
     @Override
-    @Transactional
     public String registerComment(@RequestBody String commentContent, Long projectNum, Long taskNum,
                                   String writerId) {
-        Task task = taskRepository.findById(taskNum)
-                .orElseThrow(() -> new IllegalArgumentException("해당 task가 존재하지 않습니다."));
+        Optional<Task> task = taskRepository.findById(taskNum);
 
+        if (task.isEmpty()) {
+            return "해당 task가 존재하지 않습니다.";
+        }
         Comment comment = Comment.builder()
-                .commentContent(commentContent)
-                .task(task)
-                .writerId(writerId)
-                .build();
+            .commentContent(commentContent)
+            .task(task.get())
+            .writerId(writerId)
+            .build();
 
         commentRepository.save(comment);
 
@@ -49,21 +39,22 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<CommentResponseDto> getAllComment(Long projectNum, Long taskNum) {
+    public List<CommentRespondDto> getAllComment(Long projectNum, Long taskNum) {
         Task task = taskRepository.findById(taskNum)
-                .orElseThrow(() -> new IllegalArgumentException("해당 task가 존재하지 않습니다."));
+            .orElseThrow(() -> new RuntimeException("해당 task가 존재하지 않습니다."));
 
         return commentRepository.findByTask(task);
     }
 
     @Override
-    @Transactional
     public String updateComment(String commentContent, Long projectNum, Long taskNum,
                                 Long commentNum) {
-        Comment updateComment = commentRepository.findById(commentNum)
-                .orElseThrow(() -> new IllegalArgumentException("해당 comment가 존재하지 않습니다."));
+        Optional<Comment> comment = commentRepository.findById(commentNum);
+        if (comment.isEmpty()) {
+            return "해당 comment가 존재하지 않습니다.";
+        }
 
+        Comment updateComment = comment.get();
         updateComment.setCommentContent(commentContent);
 
         commentRepository.save(updateComment);
@@ -72,12 +63,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    @Transactional
     public String deleteComment(Long projectNum, Long taskNum, Long commentNum) {
-        if (!commentRepository.existsById(commentNum)) {
-            return "해당 comment가 존재하지 않습니다.";
-        }
-
         commentRepository.deleteById(commentNum);
 
         return "comment가 삭제되었습니다.";

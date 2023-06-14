@@ -1,62 +1,54 @@
-/**
- * packageName :  com.nhnacademy.project.controller
- * fileName : ConmmentController
- * author :  ichunghui
- * date : 2023/06/02 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/02                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.controller;
 
-import java.util.List;
-
-import com.nhnacademy.task.dto.response.CommentResponseDto;
+import com.nhnacademy.task.dto.respond.CommentRespondDto;
 import com.nhnacademy.task.service.CommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/project/{projectNum}/task/{taskNum}/comment")
 public class CommentController {
+
     private final CommentService commentService;
 
-    @PostMapping("/project/{projectNum}/task/{taskNum}/comment/register")
+    @GetMapping("/register")
     public ResponseEntity<String> registerComment(@PathVariable(value = "projectNum") Long projectNum,
                                                   @PathVariable(value = "taskNum") Long taskNum,
                                                   @RequestParam(value = "writerId") String writerId,
                                                   @RequestParam(value = "commentContent") String commentContent) {
-        String result = commentService.registerComment(commentContent, projectNum, taskNum, writerId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+
+        String message = commentService.registerComment(commentContent, projectNum, taskNum, writerId);
+        return ResponseEntity.ok(message);
     }
 
-    @GetMapping("/project/{projectNum}/task/{taskNum}/comment/all")
-    public ResponseEntity<List<CommentResponseDto>> getAllComment(
-            @PathVariable(value = "projectNum") Long projectNum,
-            @PathVariable(value = "taskNum") Long taskNum) {
-        List<CommentResponseDto> comments = commentService.getAllComment(projectNum, taskNum);
+    @GetMapping("/all")
+    public ResponseEntity<List<CommentRespondDto>> getAllComment(@PathVariable(value = "projectNum") Long projectNum,
+                                                                 @PathVariable(value = "taskNum") Long taskNum) {
+
+        List<CommentRespondDto> comments = commentService.getAllComment(projectNum, taskNum);
         return ResponseEntity.ok(comments);
     }
 
-    @PutMapping("/project/{projectNum}/task/{taskNum}/comment/{commentNum}/update")
+    @GetMapping("/{commentNum}/update")
     public ResponseEntity<String> updateComment(@RequestParam(value = "commentContent") String commentContent,
                                                 @PathVariable(value = "projectNum") Long projectNum,
                                                 @PathVariable(value = "taskNum") Long taskNum,
                                                 @PathVariable(value = "commentNum") Long commentNum) {
-        String result = commentService.updateComment(commentContent, projectNum, taskNum, commentNum);
-        return ResponseEntity.ok(result);
+
+        String message = commentService.updateComment(commentContent, projectNum, taskNum, commentNum);
+        return ResponseEntity.ok(message);
     }
 
-    @DeleteMapping("/project/{projectNum}/task/{taskNum}/comment/{commentNum}/delete")
+    @GetMapping("/{commentNum}/delete")
     public ResponseEntity<String> deleteComment(@PathVariable(value = "projectNum") Long projectNum,
                                                 @PathVariable(value = "taskNum") Long taskNum,
                                                 @PathVariable(value = "commentNum") Long commentNum) {
-        String result = commentService.deleteComment(projectNum, taskNum, commentNum);
-        return ResponseEntity.ok(result);
+
+        String message = commentService.deleteComment(projectNum, taskNum, commentNum);
+        return ResponseEntity.ok(message);
     }
 }

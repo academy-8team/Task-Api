@@ -1,7 +1,6 @@
 package com.nhnacademy.task.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-public class Milestone extends BaseTimeEntity{
+public class Milestone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long milestoneNum;

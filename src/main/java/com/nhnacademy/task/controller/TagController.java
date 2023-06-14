@@ -1,63 +1,47 @@
-/**
- * packageName :  com.nhnacademy.project.controller
- * fileName : TagController
- * author :  ichunghui
- * date : 2023/06/02 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/02                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.controller;
 
-import com.nhnacademy.task.dto.response.TagResponseDto;
-
-import java.util.List;
-
+import com.nhnacademy.task.dto.respond.TagRespondDto;
 import com.nhnacademy.task.service.TagService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
 public class TagController {
     private final TagService tagService;
 
-    @PostMapping("/project/{projectNum}/create")
-    public ResponseEntity<String> createTag(@PathVariable(value = "projectNum") Long projectNum,
-                                            @RequestParam(value = "tagTitle") String tagTitle) {
-        String result = tagService.createTag(projectNum, tagTitle);
-        return ResponseEntity.ok().body(result);
+    @GetMapping("/project/{projectNum}/create")
+    public String createTag(@PathVariable(value = "projectNum") Long projectNum,
+                            @RequestParam(value = "tagTitle") String tagTitle) {
+        return tagService.createTag(projectNum, tagTitle);
     }
 
     @GetMapping("/project/{projectNum}/tag")
-    public ResponseEntity<List<TagResponseDto>> findAllTag(@PathVariable(value = "projectNum") Long projectNum) {
-        List<TagResponseDto> tags = tagService.findAllTag(projectNum);
-        return ResponseEntity.ok().body(tags);
+    public List<TagRespondDto> findAllTag(@PathVariable(value = "projectNum") Long projectNum) {
+        return tagService.findAllTag(projectNum);
     }
 
-    @PutMapping("/project/{projectNum}/tag/{tagNum}/register")
-    public ResponseEntity<String> updateTag(@PathVariable(value = "projectNum") Long projectNum,
-                                            @PathVariable(value = "tagNum") Long tagNum,
-                                            @RequestParam(value = "tagTitle") String tagTitle) {
-        String result = tagService.updateTag(projectNum, tagNum, tagTitle);
-        return ResponseEntity.ok().body(result);
+    @GetMapping("/project/{projectNum}/tag/{tagNum}/register")
+    public String updateTag(@PathVariable(value = "projectNum") Long projectNum,
+                            @PathVariable(value = "tagNum") Long tagNum,
+                            @RequestParam(value = "tagTitle") String tagTitle) {
+        return tagService.updateTag(projectNum, tagNum, tagTitle);
     }
 
-    @DeleteMapping("/project/{projectNum}/tag/{tagNum}/delete")
-    public ResponseEntity<String> deleteTag(@PathVariable(value = "projectNum") Long projectNum,
-                                            @PathVariable(value = "tagNum") Long tagNum) {
-        String result = tagService.deleteTag(projectNum, tagNum);
-        return ResponseEntity.ok().body(result);
+    @GetMapping("/project/{projectNum}/tag/{tagNum}/delete")
+    public String deleteTag(@PathVariable(value = "projectNum") Long projectNum,
+                            @PathVariable(value = "tagNum") Long tagNum) {
+        return tagService.deleteTag(projectNum, tagNum);
     }
 
     @GetMapping("/project/{projectNum}/task/{taskNum}/tag/select")
-    public ResponseEntity<List<TagResponseDto>> getTagByProjectNum(@PathVariable(value = "projectNum") Long projectNum,
-                                                                   @PathVariable(value = "taskNum") Long taskNum) {
-        List<TagResponseDto> tags = tagService.getTagByProjectNum(projectNum, taskNum);
-        return ResponseEntity.ok().body(tags);
+    public List<TagRespondDto> getTagByProjectNum(@PathVariable(value = "projectNum") Long projectNum,
+                                                  @PathVariable(value = "taskNum") Long taskNum) {
+        return tagService.getTagByProjectNum(projectNum, taskNum);
     }
 }
