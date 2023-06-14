@@ -4,7 +4,8 @@ import com.nhnacademy.task.dto.request.TaskRequestDto;
 import com.nhnacademy.task.dto.respond.TaskRespondDto;
 import com.nhnacademy.task.entity.*;
 import com.nhnacademy.task.entity.pk.TaskTagPk;
-import com.nhnacademy.task.exception.ProjectNotFoundException;
+import com.nhnacademy.task.exception.TaskNotFoundExpceion;
+import com.nhnacademy.task.exception.TaskProjectNotFoundException;
 import com.nhnacademy.task.repository.*;
 import com.nhnacademy.task.service.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -43,21 +44,26 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Optional<TaskRespondDto> findTaskDetail(Long projectNum, Long taskNum) {
-        Project project = projectRepository.findById(projectNum)
-            .orElseThrow(ProjectNotFoundException::new);
-//        if (project.isEmpty()) {
-//            return TaskRespondDto.builder().build();
-//        }
-        TaskRespondDto taskRespondDto =
-            taskRepository.findByProjectAndTaskNum(project, taskNum);
+        Optional<Project> project = projectRepository.findById(projectNum);
+        if (project.isEmpty()) {
+            // Custom or more specific exception could be used here
+            throw new TaskNotFoundExpceion();
+        }
 
-        return Optional.ofNullable(taskRespondDto);
+        Optional<TaskRespondDto> taskRespondDto = Optional.ofNullable(taskRepository.findByProjectAndTaskNum(project.get(), taskNum));
+        if (taskRespondDto.isEmpty()) {
+            // Custom or more specific exception could be used here
+            throw new TaskProjectNotFoundException();
+        }
+
+        return taskRespondDto;
     }
+
 
     @Override
     public List<TaskRespondDto> findTaskAll(Long projectNum) {
         Project project = projectRepository.findById(projectNum)
-            .orElseThrow(ProjectNotFoundException::new);
+            .orElseThrow(() -> new RuntimeException("해당 프로젝트가 존재하지 않습니다."));
         return taskRepository.findByProject(project);
     }
 

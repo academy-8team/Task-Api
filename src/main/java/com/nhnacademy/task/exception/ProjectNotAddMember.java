@@ -1,6 +1,6 @@
 /**
  * packageName :  com.nhnacademy.task.exception
- * fileName : ProjectNotFoundException
+ * fileName : ProjectNotAddMember
  * author :  ichunghui
  * date : 2023/06/14 
  * description :
@@ -12,11 +12,10 @@
 
 package com.nhnacademy.task.exception;
 
-public class ProjectNotFoundException extends RuntimeException {
-    public static final String MESSAGE = "프로젝트를 찾을 수 없습니다.";
-
-    public ProjectNotFoundException() {
-        super(MESSAGE);
+public class ProjectNotAddMember extends RuntimeException{
+    public static final String MESSAGE = "프로젝트에 멤버를 추가하는데 실패했습니다.";
+    public ProjectNotAddMember() {
+        super();
     }
 }
 

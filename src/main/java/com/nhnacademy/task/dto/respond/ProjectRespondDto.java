@@ -3,10 +3,10 @@ package com.nhnacademy.task.dto.respond;
 import com.nhnacademy.task.entity.enums.ProjectState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
 @Builder
-@Getter
+@Data
 @AllArgsConstructor
 public class ProjectRespondDto {
     private Long projectNum;

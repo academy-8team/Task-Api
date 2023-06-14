@@ -34,7 +34,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Optional<ProjectRespondDto> createProject(ProjectRequestDto projectRequestDto, Long memberNum) {
+    public Optional<ProjectRespondDto> makeProject(
+        ProjectRequestDto projectRequestDto, Long memberNum) {
         Project project = Project.builder()
             .projectName(projectRequestDto.getProjectName())
             .projectDescription(projectRequestDto.getProjectDescription())

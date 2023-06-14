@@ -3,7 +3,6 @@ package com.nhnacademy.task.service.impl;
 import com.nhnacademy.task.dto.respond.MilestoneRespondDto;
 import com.nhnacademy.task.entity.Milestone;
 import com.nhnacademy.task.entity.Project;
-import com.nhnacademy.task.exception.ProjectNotFoundException;
 import com.nhnacademy.task.repository.MilestoneRepository;
 import com.nhnacademy.task.repository.ProjectRepository;
 import com.nhnacademy.task.repository.TaskRepository;
@@ -41,7 +40,7 @@ public class MilestoneServiceImpl implements MilestoneService {
     @Override
     public List<MilestoneRespondDto> findAllMilestone(Long projectNum) {
         Project project = projectRepository.findById(projectNum)
-            .orElseThrow(ProjectNotFoundException::new);
+            .orElseThrow(() -> new RuntimeException("해당 프로젝트가 존재하지 않습니다."));
         return milestoneRepository.findByProject(project);
     }
 
@@ -74,14 +73,14 @@ public class MilestoneServiceImpl implements MilestoneService {
     @Override
     public List<MilestoneRespondDto> getMilestoneByProjectNum(Long projectNum, Long taskNum) {
         Project project = projectRepository.findById(projectNum)
-            .orElseThrow(ProjectNotFoundException::new);
+            .orElseThrow(() -> new RuntimeException("해당 프로젝트가 존재하지 않습니다."));
         return milestoneRepository.findByProject(project);
     }
 
     @Override
     public String getMilestoneByTaskNum(Long projectNum, Long taskNum) {
         Project project = projectRepository.findById(projectNum)
-            .orElseThrow(ProjectNotFoundException::new);
+            .orElseThrow(() -> new RuntimeException("해당 프로젝트가 존재하지 않습니다"));
 
         if (taskRepository.findByProjectAndTaskNum(project, taskNum).getMilestone() == null) {
             return null;

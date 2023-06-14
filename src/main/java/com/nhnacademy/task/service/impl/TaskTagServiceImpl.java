@@ -5,7 +5,6 @@ import com.nhnacademy.task.entity.Tag;
 import com.nhnacademy.task.entity.Task;
 import com.nhnacademy.task.entity.TaskTag;
 import com.nhnacademy.task.entity.pk.TaskTagPk;
-import com.nhnacademy.task.exception.TaskNotFoundException;
 import com.nhnacademy.task.repository.TagRepository;
 import com.nhnacademy.task.repository.TaskRepository;
 import com.nhnacademy.task.repository.TaskTagRepository;
@@ -25,7 +24,7 @@ public class TaskTagServiceImpl implements TaskTagService {
     private final TagRepository tagRepository;
     @Override
     public List<String> getTaskTag(Long projectNum, Long taskNum) {
-        Task task =  taskRepository.findById(taskNum).orElseThrow(TaskNotFoundException::new);
+        Task task =  taskRepository.findById(taskNum).orElseThrow(() -> new RuntimeException("해당 task가 존재하지 않습니다"));
 
         List<TaskTagRespondDto> taskTag = taskTagRepository.findByTask(task);
         List<String> taskTagTitle = new ArrayList<>();

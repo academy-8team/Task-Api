@@ -1,15 +1,3 @@
-/**
- * packageName :  com.nhnacademy.project.controller
- * fileName : ProjectController
- * author :  ichunghui
- * date : 2023/06/02 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/02                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.controller;
 
 import com.nhnacademy.task.dto.request.ProjectRequestDto;
@@ -26,28 +14,34 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/project") // RESTful naming convention, resource should be plural
+@RequestMapping("/project")
 public class ProjectController {
 
     private final ProjectService projectService;
 
-    @PostMapping
-    public ResponseEntity<ProjectRespondDto> createProject(@RequestBody @Valid ProjectRequestDto projectRequestDto,
-                                                           @PathVariable Long memberNum,
-                                                           BindingResult bindingResult) {
+    @PostMapping("/create/{memberNum}")
+    public ResponseEntity<?> createProject(@Valid @RequestBody ProjectRequestDto projectRequestDto,
+                                           BindingResult bindingResult,
+                                           @PathVariable(name = "memberNum") Long memberNum) {
+
         if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body("Project Validation이 실패했습니다.");
         }
 
-        return projectService.createProject(projectRequestDto, memberNum)
-                .map(project -> new ResponseEntity<>(project, HttpStatus.CREATED))
-                .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+        Optional<ProjectRespondDto> project = projectService.makeProject(projectRequestDto, memberNum);
+
+        if (project.isPresent()) {
+            return ResponseEntity.ok(project.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("프로젝트를 생성하는데 실패했습니다.");
+        }
     }
 
-    @GetMapping("/{projectId}")
-    public ResponseEntity<ProjectRespondDto> getProject(@PathVariable Long projectId) {
-        return projectService.getProjectByProjectNum(projectId)
-                .map(project -> new ResponseEntity<>(project, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    @GetMapping("/{projectNum}")
+    public ResponseEntity<ProjectRespondDto> getProject(@PathVariable(name = "projectNum") Long projectNum) {
+
+        Optional<ProjectRespondDto> project = projectService.getProjectByProjectNum(projectNum);
+
+        return project.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 }

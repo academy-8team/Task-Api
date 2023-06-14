@@ -4,10 +4,10 @@ import com.nhnacademy.task.entity.Milestone;
 import com.nhnacademy.task.entity.Project;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
 @Builder
-@Getter
+@Data
 @AllArgsConstructor
 public class TaskRespondDto {
     private Long taskNum;

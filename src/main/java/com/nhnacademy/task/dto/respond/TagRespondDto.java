@@ -4,10 +4,9 @@ import com.nhnacademy.task.entity.Project;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 
 @Builder
-@Getter
+@Data
 @AllArgsConstructor
 public class TagRespondDto {
     private Long tagNum;

@@ -1,6 +1,6 @@
 /**
  * packageName :  com.nhnacademy.task.exception
- * fileName : TaskNotFoundException
+ * fileName : TaskNotFoundExpceion
  * author :  ichunghui
  * date : 2023/06/14 
  * description :
@@ -12,9 +12,9 @@
 
 package com.nhnacademy.task.exception;
 
-public class TaskNotFoundException extends IllegalStateException {
-    public static final String MESSAGE = "태스크가 존재하지 않습니다.";
-    public TaskNotFoundException() {
+public class TaskNotFoundExpceion extends RuntimeException {
+    public static final String MESSAGE = "태스크를 찾을 수 없습니다.";
+    public TaskNotFoundExpceion() {
         super(MESSAGE);
     }
 }

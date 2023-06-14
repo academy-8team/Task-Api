@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Entity // todo 7 -  Task Entity에  Builder를 테이블 전체에 사용하지 않도록 한다. 또한 네이밍 규칙을 고려하여 고친다. 필요하다면 update 메서드를 추가한다.
+@Entity
 public class TaskTag {
     @EmbeddedId
     private TaskTagPk taskTagPk;

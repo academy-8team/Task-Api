@@ -14,21 +14,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Entity // todo 3 : Project  Builder를 테이블 전체에 사용하지 않도록 한다. 또한 네이밍 규칙을 고려하여 고친다. 필요하다면 update 메서드를 추가한다.
+@Entity
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "project_num")
     private Long projectNum;
 
-    @Column(name = "project_name")
     private String projectName;
 
-    @Column(name = "project_description")
     private String projectDescription;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "project_state")
     private ProjectState projectState;
 
     @OneToMany(mappedBy = "project")
