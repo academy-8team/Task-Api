@@ -3,7 +3,6 @@ package com.nhnacademy.task.service.impl;
 import com.nhnacademy.task.dto.respond.TagRespondDto;
 import com.nhnacademy.task.entity.Project;
 import com.nhnacademy.task.entity.Tag;
-import com.nhnacademy.task.exception.ProjectNotFoundException;
 import com.nhnacademy.task.repository.ProjectRepository;
 import com.nhnacademy.task.repository.TagRepository;
 import com.nhnacademy.task.repository.TaskRepository;
@@ -42,7 +41,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<TagRespondDto> findAllTag(Long projectNum) {
         Project project = projectRepository.findById(projectNum)
-            .orElseThrow(ProjectNotFoundException::new);
+            .orElseThrow(() -> new RuntimeException("해당 프로젝트가 존재하지 않습니다."));
         return tagRepository.findByProject(project);
     }
 
@@ -72,7 +71,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<TagRespondDto> getTagByProjectNum(Long projectNum, Long taskNum) {
         Project project = projectRepository.findById(projectNum)
-            .orElseThrow(ProjectNotFoundException::new);
+            .orElseThrow(() -> new RuntimeException("해당 프로젝트가 존재하지 않습니다."));
         return tagRepository.findByProject(project);
     }
 }

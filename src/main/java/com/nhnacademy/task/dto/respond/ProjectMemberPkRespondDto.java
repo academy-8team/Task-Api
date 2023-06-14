@@ -1,10 +1,10 @@
 package com.nhnacademy.task.dto.respond;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
 @AllArgsConstructor
-@Getter
+@Data
 public class ProjectMemberPkRespondDto {
     private Long projectMemberNum;
     private Long projectNum;

@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TaskService {
-    String createTask(TaskRequestDto taskRequestDto, Long projectNum);
+    String createTask(TaskRequestDto taskRequestDto,
+                      Long projectNum);
 
     Optional<TaskRespondDto> findTaskDetail(Long projectNum, Long taskNum);
 

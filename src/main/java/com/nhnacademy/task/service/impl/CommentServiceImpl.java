@@ -3,7 +3,6 @@ package com.nhnacademy.task.service.impl;
 import com.nhnacademy.task.dto.respond.CommentRespondDto;
 import com.nhnacademy.task.entity.Comment;
 import com.nhnacademy.task.entity.Task;
-import com.nhnacademy.task.exception.TaskNotFoundException;
 import com.nhnacademy.task.repository.CommentRepository;
 import com.nhnacademy.task.repository.TaskRepository;
 import com.nhnacademy.task.service.CommentService;
@@ -42,7 +41,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentRespondDto> getAllComment(Long projectNum, Long taskNum) {
         Task task = taskRepository.findById(taskNum)
-            .orElseThrow(TaskNotFoundException::new);
+            .orElseThrow(() -> new RuntimeException("해당 task가 존재하지 않습니다."));
 
         return commentRepository.findByTask(task);
     }

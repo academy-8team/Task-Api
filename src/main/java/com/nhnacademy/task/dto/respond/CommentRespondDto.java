@@ -2,10 +2,10 @@ package com.nhnacademy.task.dto.respond;
 
 import com.nhnacademy.task.entity.Task;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
 @AllArgsConstructor
-@Getter
+@Data
 public class CommentRespondDto {
     private Long commentNum;
 

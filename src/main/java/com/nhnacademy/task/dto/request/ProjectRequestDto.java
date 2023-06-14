@@ -2,13 +2,13 @@ package com.nhnacademy.task.dto.request;
 
 import com.nhnacademy.task.entity.enums.ProjectState;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
 @AllArgsConstructor
-@Getter
+@Data
 public class ProjectRequestDto {
     private Long projectNum;
 

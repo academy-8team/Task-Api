@@ -5,10 +5,10 @@ import com.nhnacademy.task.entity.Task;
 import com.nhnacademy.task.entity.pk.TaskTagPk;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
 @Builder
-@Getter
+@Data
 @AllArgsConstructor
 public class TaskTagRespondDto {
     private TaskTagPk taskTagPk;

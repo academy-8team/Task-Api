@@ -9,7 +9,8 @@ import java.util.Optional;
 public interface ProjectService {
     List<ProjectRespondDto> getProjects(int page);
 
-    Optional<ProjectRespondDto> createProject(ProjectRequestDto projectRequestDto, Long memberNum);
+    Optional<ProjectRespondDto> makeProject(
+        ProjectRequestDto projectRequestDto, Long memberNum);
 
     Optional<ProjectRespondDto> getProjectByProjectNum(Long projectNum);
 }

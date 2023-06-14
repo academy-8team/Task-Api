@@ -1,63 +1,59 @@
-/**
- * packageName :  com.nhnacademy.project.controller
- * fileName : MilestoneController
- * author :  ichunghui
- * date : 2023/06/02
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/02                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.controller;
 
 import com.nhnacademy.task.dto.respond.MilestoneRespondDto;
 import com.nhnacademy.task.service.MilestoneService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RequiredArgsConstructor
-@RestController // todo 9 - restful하게 api를 수정하고, 네이밍 규칙을 지킵니다. 또한, ResponseEntity와 @Valid, BindingResult를 사용합니다.
+@RestController
+@RequestMapping("/project/{projectNum}/milestone")
 public class MilestoneController {
+
     private final MilestoneService milestoneService;
 
-    @GetMapping("/project/{projectNum}/milestone/create")
-    public String createTag(@PathVariable(value = "projectNum") Long projectNum,
-                            @RequestParam(value = "milestoneTitle") String milestoneTitle) {
-        return milestoneService.createMilestone(projectNum, milestoneTitle);
+    @GetMapping("/create")
+    public ResponseEntity<String> createTag(@PathVariable(value = "projectNum") Long projectNum,
+                                            @RequestParam(value = "milestoneTitle") String milestoneTitle) {
+        String result = milestoneService.createMilestone(projectNum, milestoneTitle);
+        return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/project/{projectNum}/milestone")
-    public List<MilestoneRespondDto> findAllTag(@PathVariable(value = "projectNum") Long projectNum) {
-        return milestoneService.findAllMilestone(projectNum);
+    @GetMapping
+    public ResponseEntity<List<MilestoneRespondDto>> findAllTag(@PathVariable(value = "projectNum") Long projectNum) {
+        List<MilestoneRespondDto> milestones = milestoneService.findAllMilestone(projectNum);
+        return ResponseEntity.ok(milestones);
     }
 
-    @GetMapping("/project/{projectNum}/milestone/{milestoneNum}/register")
-    public String updateTag(@PathVariable(value = "projectNum") Long projectNum,
-                            @PathVariable(value = "milestoneNum") Long milestoneNum,
-                            @RequestParam(value = "milestoneTitle") String milestoneTitle) {
-        return milestoneService.updateTag(projectNum, milestoneNum, milestoneTitle);
+    @GetMapping("/{milestoneNum}/register")
+    public ResponseEntity<String> updateTag(@PathVariable(value = "projectNum") Long projectNum,
+                                            @PathVariable(value = "milestoneNum") Long milestoneNum,
+                                            @RequestParam(value = "milestoneTitle") String milestoneTitle) {
+        String result = milestoneService.updateTag(projectNum, milestoneNum, milestoneTitle);
+        return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/project/{projectNum}/milestone/{milestoneNum}/delete")
-    public String deleteTag(@PathVariable(value = "projectNum") Long projectNum,
-                            @PathVariable(value = "milestoneNum") Long milestoneNum) {
-        return milestoneService.deleteTag(projectNum, milestoneNum);
+    @GetMapping("/{milestoneNum}/delete")
+    public ResponseEntity<String> deleteTag(@PathVariable(value = "projectNum") Long projectNum,
+                                            @PathVariable(value = "milestoneNum") Long milestoneNum) {
+        String result = milestoneService.deleteTag(projectNum, milestoneNum);
+        return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/project/{projectNum}/task/{taskNum}/milestone/select")
-    public List<MilestoneRespondDto> getTagByProjectNum(@PathVariable(value = "projectNum") Long projectNum,
-                                                        @PathVariable(value = "taskNum") Long taskNum) {
-        return milestoneService.getMilestoneByProjectNum(projectNum, taskNum);
+    @GetMapping("/task/{taskNum}/select")
+    public ResponseEntity<List<MilestoneRespondDto>> getTagByProjectNum(@PathVariable(value = "projectNum") Long projectNum,
+                                                                        @PathVariable(value = "taskNum") Long taskNum) {
+        List<MilestoneRespondDto> milestones = milestoneService.getMilestoneByProjectNum(projectNum, taskNum);
+        return ResponseEntity.ok(milestones);
     }
 
-    @GetMapping("/project/{projectNum}/task/{taskNum}/milestone")
-    public String getMilestoneInTask(@PathVariable(value = "projectNum") Long projectNum,
-                                     @PathVariable(value = "taskNum") Long taskNum) {
-        return milestoneService.getMilestoneByTaskNum(projectNum, taskNum);
+    @GetMapping("/task/{taskNum}")
+    public ResponseEntity<String> getMilestoneInTask(@PathVariable(value = "projectNum") Long projectNum,
+                                                     @PathVariable(value = "taskNum") Long taskNum) {
+        String result = milestoneService.getMilestoneByTaskNum(projectNum, taskNum);
+        return ResponseEntity.ok(result);
     }
 }

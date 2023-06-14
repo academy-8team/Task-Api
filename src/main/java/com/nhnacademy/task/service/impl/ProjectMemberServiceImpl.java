@@ -35,9 +35,12 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     @Override
     public Optional<ProjectMemberRespondDto> getProjectAdministratorByProjectNum(Long projectNum) {
         Optional<Project> project = projectRepository.findById(projectNum);
+//        if (project.isEmpty()) {
+//            return ProjectMemberRespondDto.builder().build();
+//        }
         ProjectMemberRespondDto projectMemberRespondDto =
             projectMemberRepository.findByProjectMemberPkProjectNumAndProjectRole(projectNum,
-                    ProjectRole.valueOf(ProjectRole.PROJECT_ROLE_ADMIN.toString()));
+                ProjectRole.PROJECT_ROLE_ADMIN.toString());
 
         return Optional.ofNullable(projectMemberRespondDto);
     }

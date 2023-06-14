@@ -1,26 +1,17 @@
-/**
- * packageName :  com.nhnacademy.task.controller
- * fileName : TagController
- * author :  ichunghui
- * date : 2023/06/11 
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2023/06/11                ichunghui             최초 생성
- */
-
 package com.nhnacademy.task.controller;
 
 import com.nhnacademy.task.dto.respond.TagRespondDto;
 import com.nhnacademy.task.service.TagService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RequiredArgsConstructor
-@RestController // todo 11 - restful하게 api를 수정하고, 네이밍 규칙을 지킵니다. 또한, ResponseEntity와 @Valid, BindingResult를 사용합니다.
+@RestController
 public class TagController {
     private final TagService tagService;
 
